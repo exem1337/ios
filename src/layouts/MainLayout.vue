@@ -11,11 +11,11 @@
           @click="toggleLeftDrawer"
         />
 
-        <q-toolbar-title> ИОС </q-toolbar-title>
+        <q-toolbar-title> АОС </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered> </q-drawer>
+    <q-drawer v-model="leftDrawerOpen" persistent bordered />
 
     <q-page-container>
       <router-view />
@@ -25,8 +25,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-const leftDrawerOpen = ref(false);
-toggleLeftDrawer();
+const leftDrawerOpen = ref(true);
+leftDrawerOpen.value = false;
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;

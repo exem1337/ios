@@ -1,5 +1,6 @@
 import { boot } from 'quasar/wrappers';
 import { createI18n } from 'vue-i18n';
+import { Quasar, Meta, Dialog } from 'quasar';
 
 import messages from 'src/i18n';
 
@@ -29,5 +30,5 @@ export default boot(({ app }) => {
   });
 
   // Set i18n instance on app
-  app.use(i18n);
+  app.use(i18n).use(Quasar, { plugins: { Meta, Dialog } });
 });
