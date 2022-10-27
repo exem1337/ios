@@ -4,6 +4,11 @@
   padding: 0px 8px;
 }
 
+.flex {
+  display: flex;
+  align-items: center;
+}
+
 .mt-big {
   margin-top: 120px;
 }
@@ -18,4 +23,20 @@
 
 .mt-tiny {
   margin-top: 8px;
+}
+
+.ml-big {
+  margin-left: 120px;
+}
+
+.ml-med {
+  margin-left: 60px;
+}
+
+.ml-small {
+  margin-left: 20px;
+}
+
+.ml-tiny {
+  margin-left: 8px;
 }

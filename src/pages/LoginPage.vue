@@ -23,7 +23,6 @@ import SignInStudent from 'components/auth/SignInStudent.vue';
 import SignInExpert from 'components/auth/SignInExpert.vue';
 
 const isActiveLoginExpert = ref(false);
-const email = ref();
 
 const meta = {
   title: 'Войти в систму',
