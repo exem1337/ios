@@ -1,6 +1,9 @@
 <template>
   <div class="course">
-    <q-tree :nodes="simple" node-key="label" />
+    <div class="course--left-panel">
+      <q-tree :nodes="simple" node-key="label" />
+      <q-btn :to="`/test/${route.params.id}`">Пройти тестирование</q-btn>
+    </div>
     <div class="course__wrapper">
       <VuePdf
         v-for="page in numOfPages"
@@ -17,11 +20,14 @@ import { VuePdf, createLoadingTask } from 'vue3-pdfjs/esm';
 import { VuePdfPropsType } from 'vue3-pdfjs/components/vue-pdf/vue-pdf-props'; // Prop type definitions can also be imported
 import { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const pdfSrc = ref<VuePdfPropsType['src']>(
   'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf'
 );
 const numOfPages = ref(0);
+
+const route = useRoute();
 
 const simple = [
   {

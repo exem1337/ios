@@ -2,33 +2,58 @@
   <q-page>
     <div class="container mt-med">
       <div class="login-page">
-        <sign-in-student
-          :class="{ 'not-active': isActiveLoginExpert }"
-          @click="isActiveLoginExpert = false"
-        />
-        <sign-in-expert
-          :class="{ 'not-active': !isActiveLoginExpert }"
-          @click="isActiveLoginExpert = true"
-        />
+        <q-card>
+          <q-card-section><h6>Войти в систему</h6></q-card-section>
+          <q-form @submit.prevent="onSubmit" ref="myForm">
+            <q-input
+              ref="surnameRef"
+              filled
+              v-model="email"
+              label="Электронная почта"
+              type="email"
+              clearable
+              :rules="[(val) => val?.length > 0 || 'Обязательное поле']"
+            />
+            <q-input
+              ref="nameRef"
+              filled
+              v-model="password"
+              label="Пароль"
+              clearable
+              type="password"
+              :rules="[
+                (val) => val?.length > 0 || 'Обязательное поле',
+                (val) =>
+                  new RegExp(/^[A-Za-zА-Яа-я]+$/).test(val) ||
+                  'Недопустимый формат',
+              ]"
+            />
+            <q-btn type="submit">Войти</q-btn>
+          </q-form>
+        </q-card>
       </div>
-      <p class="mt-small">Уже есть аккаунт? <span>войти в систму</span></p>
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { useMeta } from 'quasar';
-import { ref } from 'vue';
-import SignInStudent from 'components/auth/SignInStudent.vue';
-import SignInExpert from 'components/auth/SignInExpert.vue';
+import { AuthManager } from 'src/services/auth.service';
 
-const isActiveLoginExpert = ref(false);
+import { ref } from 'vue';
+
+const email = ref();
+const password = ref();
 
 const meta = {
   title: 'Войти в систму',
 };
 
 useMeta(meta);
+
+const onSubmit = async () => {
+  await AuthManager.login();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -38,17 +63,21 @@ useMeta(meta);
   .login-page {
     display: flex;
     align-items: flex-start;
-    justify-content: space-between;
+    justify-content: center;
 
     .q-card {
-      width: 49%;
-      transition: $transition;
-      &.not-active {
-        filter: opacity(0.6);
+      width: 100%;
+      max-width: 500px;
+      padding: 14px;
+      position: relative;
 
-        &:hover {
-          filter: opacity(0.8);
+      &__section {
+        h6 {
+          margin: 0;
         }
+      }
+
+      .q-btn {
       }
     }
   }

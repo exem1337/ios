@@ -11,10 +11,20 @@ const routes: RouteRecordRaw[] = [
         path: '/courses/:id',
         component: () => import('src/pages/CourseView.vue'),
       },
+      {
+        path: '/profile',
+        component: () => import('src/pages/ProfilePage.vue'),
+      },
+      {
+        path: '/about',
+        component: () => import('src/pages/AboutPage.vue'),
+      },
+      {
+        path: '/test/:id',
+        component: () => import('src/pages/TestPage.vue'),
+      },
     ],
   },
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
