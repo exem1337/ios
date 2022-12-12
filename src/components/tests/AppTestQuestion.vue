@@ -15,9 +15,8 @@
 </template>
 
 <script lang="ts" setup>
-import { watch } from 'fs';
 import { ITestQuestion, ITestUserAnswer } from 'src/models/test.model';
-import { onBeforeMount, ref } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps<{
   question: ITestQuestion;

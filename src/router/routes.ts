@@ -12,6 +12,14 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/CourseView.vue'),
       },
       {
+        path: '/courses/:id/edit',
+        component: () => import('pages/CourseEdit.vue'),
+      },
+      {
+        path: '/courses/:id/edit/test',
+        component: () => import('pages/TestEdit.vue'),
+      },
+      {
         path: '/profile',
         component: () => import('src/pages/ProfilePage.vue'),
       },

@@ -12,6 +12,7 @@
           <p class="courses__wrapper--item__description">
             {{ course?.description }}
           </p>
+          <q-btn @click="onGoToEdit(course?.id)">Редактировать Курс</q-btn>
         </q-item>
       </div>
     </div>
@@ -21,6 +22,7 @@
 <script lang="ts" setup>
 import { ICourse } from 'src/models/course.model';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const courses = ref<Array<ICourse>>([
   {
@@ -64,6 +66,11 @@ const courses = ref<Array<ICourse>>([
     description: 'Курс основ программирования на языке C++',
   },
 ]);
+const router = useRouter();
+
+const onGoToEdit = (id: number) => {
+  router.replace(`/courses/${id}/edit`);
+};
 </script>
 
 <style lang="scss" scoped>
