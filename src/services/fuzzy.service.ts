@@ -33,8 +33,8 @@ export class FuzzyService {
     testDifficuilty: EFuzzyStatuses
   ): EFuzzyStatuses {
     return (
-      FUZZY_RULES.find((rule) => {
-        if (
+      FUZZY_RULES.find(
+        (rule) =>
           rule.statements.find(
             (statement) =>
               statement.name === avgTimeResult.name &&
@@ -52,12 +52,7 @@ export class FuzzyService {
               statement.name === ETermNames.TestDifficuilty &&
               statement.fuzzyName === testDifficuilty
           )
-        ) {
-          return true;
-        }
-
-        return false;
-      })?.result || EFuzzyStatuses.UnCalculated
+      )?.result || EFuzzyStatuses.UnCalculated
     );
   }
 

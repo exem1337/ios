@@ -9,7 +9,7 @@ import { EFuzzyStatuses } from './enums/fuzzyNames.enum';
 
 onMounted(() => {
   const mamdani = new FuzzyService();
-  console.log(mamdani.startMamdani(5, EFuzzyStatuses.Professional, 90));
+  console.log(mamdani.startMamdani(5, EFuzzyStatuses.Expert, 90));
 });
 </script>
 
