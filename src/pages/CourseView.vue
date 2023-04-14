@@ -1,7 +1,11 @@
 <template>
   <div class="course">
     <div class="course--left-panel">
-      <q-tree :nodes="simple" node-key="label" />
+      <TopicList
+        :topics="topics"
+        :current-topic="currentTopic"
+        @select="onTopicSelect"
+      />
       <q-btn :to="`/test/${route.params.id}`">Пройти тестирование</q-btn>
     </div>
     <div class="course__wrapper">
@@ -21,50 +25,32 @@ import { VuePdfPropsType } from 'vue3-pdfjs/components/vue-pdf/vue-pdf-props'; /
 import { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { api } from 'src/boot/axios';
+import { IDisciplineTopic } from 'src/models/course.model';
+import { IBasedResponse } from 'src/models/api.model';
+import TopicList from 'components/TopicList.vue';
+import { FileService } from 'src/services/file.service';
 
 const pdfSrc = ref<VuePdfPropsType['src']>(
-  'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf'
+  // 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf'
 );
 const numOfPages = ref(0);
-
+const topics = ref<Array<IDisciplineTopic>>([]);
+const currentTopic = ref(1);
 const route = useRoute();
 
-const simple = [
-  {
-    label: 'Satisfied customers (with avatar)',
-    avatar: 'https://cdn.quasar.dev/img/boy-avatar.png',
-    children: [
-      {
-        label: 'Good food (with icon)',
-        icon: 'restaurant_menu',
-        children: [{ label: 'Quality ingredients' }, { label: 'Good recipe' }],
-      },
-      {
-        label: 'Good service (disabled node with icon)',
-        icon: 'room_service',
-        disabled: true,
-        children: [
-          { label: 'Prompt attention' },
-          { label: 'Professional waiter' },
-        ],
-      },
-      {
-        label: 'Pleasant surroundings (with icon)',
-        icon: 'photo',
-        children: [
-          {
-            label: 'Happy atmosphere (with image)',
-            img: 'https://cdn.quasar.dev/img/logo_calendar_128px.png',
-          },
-          { label: 'Good table presentation' },
-          { label: 'Pleasing decor' },
-        ],
-      },
-    ],
-  },
-];
+function onTopicSelect(key: number) {
+  currentTopic.value = key;
+}
 
-onMounted(() => {
+onMounted(async () => {
+  topics.value = await api.get<IBasedResponse<Array<IDisciplineTopic>>>(`/getTopics?discipline=${route.params.id}`)
+    .then((res) => res.data.Data.sort((a, b) => a.Number - b.Number));
+    
+  const file = await FileService.getFile(topics.value?.[0].File_Link, 'application/pdf')
+  const url = URL.createObjectURL(file)
+  pdfSrc.value = url;
+  console.log(url)
   const loadingTask = createLoadingTask(pdfSrc.value);
   loadingTask.promise.then((pdf: PDFDocumentProxy) => {
     numOfPages.value = pdf.numPages;

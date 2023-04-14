@@ -24,35 +24,29 @@
                 <q-icon name="info" />
               </q-item-section>
             </q-item>
-            <q-separator inset spaced />
-            <q-item-label header>Files</q-item-label>
-            <q-item
-              v-for="n in 3"
-              :key="`y.${n}`"
-              clickable
-              v-close-popup
-              tabindex="0"
-            >
-              <q-item-section avatar>
-                <q-avatar
-                  icon="assignment"
-                  color="primary"
-                  text-color="white"
-                />
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>Vacation</q-item-label>
-                <q-item-label caption>February 22, 2016</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-icon name="info" />
-              </q-item-section>
-            </q-item>
           </q-list>
         </q-btn-dropdown>
-        <q-btn to="/courses" stretch flat label="Дисциплины" />
-        <q-btn to="/profile" stretch flat label="Профиль" />
-        <q-btn to="/about" stretch flat label="Справка" />
+        <q-btn 
+          to="/courses" 
+          stretch 
+          flat 
+          label="Дисциплины" 
+          :class="{ 'selected' : route.path.includes('/courses') }"
+        />
+        <q-btn 
+          to="/profile" 
+          stretch 
+          flat 
+          label="Профиль" 
+          :class="{ 'selected' : route.path.includes('/profile') }"
+        />
+        <q-btn 
+          to="/about" 
+          stretch 
+          flat 
+          label="Справка" 
+          :class="{ 'selected' : route.path.includes('/about') }"
+        />
         <q-btn stretch flat label="Выход" @click="onLogout" />
       </template>
     </q-toolbar>
@@ -62,14 +56,21 @@
 <script lang="ts" setup>
 import { useUserStore } from 'src/stores/userStore';
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const userStore = useUserStore();
-const isShowNav = computed(() => userStore.getUser?.id);
+const isShowNav = computed(() => userStore.isLoggedIn);
 const router = useRouter();
+const route = useRoute();
 
 const onLogout = () => {
   userStore.clearUser();
   router.push('/');
 };
 </script>
+
+<style lang="scss" scoped>
+.selected {
+  background-color: #6d4c41;
+}
+</style>

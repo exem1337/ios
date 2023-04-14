@@ -20,6 +20,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/TestEdit.vue'),
       },
       {
+        path: '/courses/:id/edit/test/:testId',
+        component: () => import('pages/TestEdit.vue'),
+      },
+      {
         path: '/profile',
         component: () => import('src/pages/ProfilePage.vue'),
       },
@@ -30,6 +34,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/test/:id',
         component: () => import('src/pages/TestPage.vue'),
+      },
+      {
+        path: '/fuzzy',
+        component: () => import('src/pages/FuzzyView.vue'),
       },
     ],
   },

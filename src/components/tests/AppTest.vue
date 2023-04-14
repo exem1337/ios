@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5>test</h5>
+    <h5>Тестирование по теме 1 - Основы языка c++</h5>
     <AppTestQuestion
       v-if="!isTestFinished"
       :question="test?.questions?.[currentQuestionIndex]"

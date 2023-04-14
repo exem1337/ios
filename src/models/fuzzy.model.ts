@@ -39,3 +39,13 @@ export interface IFuzzyRule {
   statements: Array<IFuzzyRuleStatement>;
   result: EFuzzyStatuses;
 }
+
+export interface IRuleDots {
+  x: Array<number>;
+  y: Array<number>;
+}
+
+export interface IDifficulty {
+  Key: number;
+  
+}

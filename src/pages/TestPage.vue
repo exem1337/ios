@@ -28,26 +28,26 @@ const test = ref<ITest>({
   questions: [
     {
       id: 0,
-      title: 'первый вопрос',
+      title: 'Где правильно указана переменная?',
       answers: [
         {
           id: 0,
-          text: 'первый ответ',
+          text: `char sym = 'a';`,
           isCorrect: true,
         },
         {
           id: 1,
-          text: 'второй ответ',
+          text: 'var str = "Hi";',
           isCorrect: false,
         },
         {
           id: 2,
-          text: 'третий ответ',
+          text: 'int num = "1";',
           isCorrect: false,
         },
         {
           id: 3,
-          text: 'четвертый ответ',
+          text: 'float x = 32,14;',
           isCorrect: false,
         },
       ],

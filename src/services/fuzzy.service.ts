@@ -64,7 +64,7 @@ export class FuzzyService {
       (bound: IFuzzyBound) =>
         bound.bounds.inner[0] <= value && bound.bounds.inner[1] >= value
     );
-    console.log(innerBound);
+
     if (innerBound) {
       return {
         fuzzyName: innerBound.fuzzyName,

@@ -10,7 +10,7 @@ export const FUZZY_BOUNDS: Array<IFuzzyBound> = [
     name: ETermNames.AnswerTime,
     fuzzyName: ETimeFuzzyStatuses.Slow,
     bounds: {
-      inner: [70, 540],
+      inner: [70, 999999],
       outerLeft: [55, 70],
     },
   },

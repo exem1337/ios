@@ -21,14 +21,15 @@
               label="Пароль"
               clearable
               type="password"
-              :rules="[
-                (val) => val?.length > 0 || 'Обязательное поле',
-                (val) =>
-                  new RegExp(/^[A-Za-zА-Яа-я]+$/).test(val) ||
-                  'Недопустимый формат',
-              ]"
             />
-            <q-btn type="submit">Войти</q-btn>
+            <div class="btn-wrapper">
+              <q-btn 
+                color="secondary"
+                type="submit"
+              >
+                Войти
+              </q-btn>
+            </div>
           </q-form>
         </q-card>
       </div>
@@ -41,9 +42,11 @@ import { useMeta } from 'quasar';
 import { AuthManager } from 'src/services/auth.service';
 
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const email = ref();
 const password = ref();
+const router = useRouter();
 
 const meta = {
   title: 'Войти в систму',
@@ -52,12 +55,16 @@ const meta = {
 useMeta(meta);
 
 const onSubmit = async () => {
-  await AuthManager.login();
+  await AuthManager.login(email.value, password.value, router);
 };
 </script>
 
 <style lang="scss" scoped>
 @import 'assets/styles/variables.scss';
+
+:global(input:-internal-autofill-selected) {
+  background-color: black !important;
+}
 
 .container {
   .login-page {
@@ -77,7 +84,15 @@ const onSubmit = async () => {
         }
       }
 
-      .q-btn {
+      .btn-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+
+        .q-btn {
+          margin-top: 8px;
+          
+        }
       }
     }
   }

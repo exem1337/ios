@@ -1,4 +1,4 @@
-export enum EUserTypes {
-  Student = 'student',
-  Expert = 'expert',
+export enum EUserRole {
+  Student = 'Студент',
+  Expert = 'Эксперт',
 }

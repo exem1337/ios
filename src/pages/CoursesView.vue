@@ -3,16 +3,23 @@
     <div class="container">
       <div class="courses__wrapper">
         <q-item
-          v-for="(course, key) in courses"
+          v-for="(course, key) in disciplines"
           :key="key"
           class="courses__wrapper--item bg-amber-1 shadow-2"
-          :to="`courses/${course?.id}`"
         >
-          <p class="courses__wrapper--item__heading">{{ course?.name }}</p>
-          <p class="courses__wrapper--item__description">
-            {{ course?.description }}
-          </p>
-          <q-btn @click="onGoToEdit(course?.id)">Редактировать Курс</q-btn>
+          <div @click="onGoToCourse(course.Key)">
+            <p class="courses__wrapper--item__heading">{{ course?.Name }}</p>
+            <p class="courses__wrapper--item__description">
+              {{ course?.ShName }}
+            </p>
+          </div>
+          <q-btn
+            v-if="store.isExpert"
+            color="brown-8" 
+            @click.stop="onGoToEdit(course?.Key)"
+          >
+            Редактировать
+          </q-btn>
         </q-item>
       </div>
     </div>
@@ -20,57 +27,32 @@
 </template>
 
 <script lang="ts" setup>
+import { Cookies } from 'quasar';
+import { api } from 'src/boot/axios';
 import { ICourse } from 'src/models/course.model';
-import { ref } from 'vue';
+import { useUserStore } from 'src/stores/userStore';
+import { onBeforeMount, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-const courses = ref<Array<ICourse>>([
-  {
-    name: 'Основы программирования на языке C++',
-    id: 0,
-    description: 'Курс основ программирования на языке C++',
-  },
-  {
-    name: 'Основы программирования на языке C++',
-    id: 0,
-    description: 'Курс основ программирования на языке C++',
-  },
-  {
-    name: 'Основы программирования на языке C++',
-    id: 0,
-    description: 'Курс основ программирования на языке C++',
-  },
-  {
-    name: 'Основы программирования на языке C++',
-    id: 0,
-    description: 'Курс основ программирования на языке C++',
-  },
-  {
-    name: 'Основы программирования на языке C++',
-    id: 0,
-    description: 'Курс основ программирования на языке C++',
-  },
-  {
-    name: 'Основы программирования на языке C++',
-    id: 0,
-    description: 'Курс основ программирования на языке C++',
-  },
-  {
-    name: 'Основы программирования на языке C++',
-    id: 0,
-    description: 'Курс основ программирования на языке C++',
-  },
-  {
-    name: 'Основы программирования на языке C++',
-    id: 0,
-    description: 'Курс основ программирования на языке C++',
-  },
-]);
+const disciplines = ref<Array<ICourse>>();
 const router = useRouter();
+const store = useUserStore();
 
-const onGoToEdit = (id: number) => {
-  router.replace(`/courses/${id}/edit`);
+function onGoToEdit(id: number) {
+  router.push(`/courses/${id}/edit`);
 };
+
+function onGoToCourse(id: number) {
+  router.push(`/courses/${id}`);
+}
+
+onBeforeMount(async () => {
+  disciplines.value = await api.get('/getMyDisciplines', {
+    headers: {
+      userkey: Cookies.get('UserKey'),
+    }
+  }).then((res) => res.data.Data);
+})
 </script>
 
 <style lang="scss" scoped>
@@ -85,6 +67,7 @@ const onGoToEdit = (id: number) => {
   gap: 24px;
 
   &--item {
+    position: relative;
     width: 48%;
     height: fit-content;
     padding: 16px;
@@ -110,6 +93,12 @@ const onGoToEdit = (id: number) => {
 
     &:hover {
       background: #ffecb3 !important;
+    }
+
+    .q-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
     }
   }
 }
