@@ -49,6 +49,7 @@ import TestEditItem from 'components/TestEditItem.vue';
 import { api } from 'src/boot/axios';
 import { useRoute, useRouter } from 'vue-router';
 import { useMeta } from 'quasar';
+import { IDiscipline } from 'src/models/course.model';
 
 const test = ref<ITest>({
   Questions: [],
@@ -67,6 +68,7 @@ const isCreate = ref(false);
 const newQuestions = ref([]);
 const newAnswers = ref([]);
 const deletedQuestions = ref<Array<number>>([]);
+const discipline = ref<IDiscipline>();
 
 function onAddQuestion(): void {
   const question = {
@@ -197,15 +199,16 @@ function onUpdateAnswer(answer: ITestAnswerUpdate) {
 }
 
 async function onSave() {
-  if (!route.params.id) {
+  if (!route.params.testId) {
     let url = '/submitTest';
-    if (selectedTestType.value.Key === 26) {
-      url += `?disciplineKey=${route.params.discipline}`
-    }
     const testId = await api.post(url, {
       name: testName.value,
-      difficulty: selectedTestType.value.Key
-    }).then((res) => res.data.Data.Key);
+      difficulty: 15
+    }).then((res) => res.data.Data);
+    console.log(testId)
+    await api.patch(`/editTopicMaterial/${route.params.materialId}`, {
+      testKey: testId,
+    })
     test.value.Questions?.forEach(async (question) => {
       await api.post('/submitQuestion', {
         TestKey: testId,
@@ -218,6 +221,8 @@ async function onSave() {
         }))
       })
     })
+
+    router.push(`/courses/${route.params.id}/edit`)
     return;
   }
 
@@ -244,7 +249,7 @@ async function onSave() {
       const answers = newAnswers.value.filter((newans) => newans.questionKey === el.Key);
       
       return await api.post('/submitQuestion', {
-        TestKey: Number(route.params.id),
+        TestKey: Number(route.params.testId),
         fileKey: el.fileKey,
         questionName: q?.Header,
         varArr: answers?.map((ans) => ({
@@ -307,6 +312,8 @@ watch(
 )
 
 onBeforeMount(async () => {
+  discipline.value = await api.get(`/getDisciplines?by=key&id=${route.params.id}`).then((res) => res.data.Data?.[0]);
+
   if (route.params.testId) {
     test.value = await api.get(`/getTest/${route.params.testId}?GetCorrect=true`).then((res) => res.data.Data);
     if (test.value === undefined) {

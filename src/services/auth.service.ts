@@ -54,6 +54,7 @@ export class AuthManager {
     store.logout();
     Cookies.remove('Token');
     Cookies.remove('Verify');
+    Cookies.remove('UserKey')
     router.push('/');
   }
 

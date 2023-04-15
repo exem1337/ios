@@ -1,5 +1,6 @@
 <template>
-  <q-card>
+  <AppLoader v-if="isDataLoading" />
+  <q-card v-else>
     <h4>Редактирование дисциплины: {{ discipline?.Name }}</h4>
     <div class="topic-name">
       <q-input
@@ -13,6 +14,20 @@
         v-model="nameRef.shName"
       />
     </div>
+    <q-btn 
+      color="primary"
+      @click="onGoToUsers"
+    >
+      Управление доступом
+      <q-tooltip
+        anchor="top middle" 
+        color="primary"
+        self="bottom middle" 
+        :offset="[10, 10]"
+      >
+        Назначить обучающихся, которым будет видна дисциплина
+      </q-tooltip>
+    </q-btn>
     <div class="topics-list">
       <p>Список тем</p>
       <q-btn 
@@ -32,12 +47,20 @@
           label="Название темы" 
           v-model="newThemeName" 
         />
-        <q-btn
-          color="primary"
-          @click="onThemeCreate"
-        >
-          Сохранить
-        </q-btn>
+        <div>
+          <q-btn
+            color="primary"
+            @click="onThemeCreate"
+          >
+            Сохранить
+          </q-btn>
+          <q-btn
+            color="primary"
+            @click="isShowNewTheme = false"
+          >
+            Отменить
+          </q-btn>
+        </div>
       </div>
 
       <DisciplineTopic 
@@ -47,6 +70,7 @@
         :topics="topic"
         :prevent-upload="isPreventUpload"
         :getDifficulty="getDifficultyName"
+        @load="loadData"
       />
 
       <q-btn
@@ -77,6 +101,7 @@ import { IModalProps } from 'src/models/modal.model';
 import EditTopicFile from 'components/EditTopicFile.vue';
 import { useMeta } from 'quasar';
 import DisciplineTopic from 'components/DisciplineTopic.vue';
+import AppLoader from 'components/AppLoader.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -91,6 +116,7 @@ const nameRef = ref({
 const currentEditingTopic = ref<IDisciplineTopic>();
 const sortedTopics = ref<Array<Array<IDisciplineTopic>>>();
 const isPreventUpload = ref(true);
+const isDataLoading = ref(false);
 const topicModalProps = ref<IModalProps> ({
   component: EditTopicFile,
   headerText: 'Материал темы',
@@ -99,6 +125,10 @@ const topicModalProps = ref<IModalProps> ({
 });
 const isShowNewTheme = ref(false);
 const newThemeName = ref();
+
+function onGoToUsers() {
+  router.push(`/courses/${route.params.id}/edit/users`);
+}
 
 function getDifficultyName(key: number) {
   return diffs.value.find((diff) => diff.Key === key)?.Name;
@@ -109,6 +139,7 @@ async function onSave() {
     name: nameRef.value.name,
     shName: nameRef.value.shName,
   })
+  await loadData();
 }
 
 async function onThemeCreate() {
@@ -118,6 +149,7 @@ async function onThemeCreate() {
     Topic_Weight: 0,
     Discip_Key: Number(route.params.id), 
   })
+  await loadData();
 }
 
 async function onAddTopicMaterial(salt: Ref<string>) {
@@ -143,7 +175,7 @@ function sortTopics(topics: Array<IDisciplineTopic>): Array<Array<IDisciplineTop
   const result: Array<Array<IDisciplineTopic>> = [];
 
   topics.forEach((topic) => {
-    const resultItem = result.find((res) => res.find((resItem) => resItem.TopicKey === topic.TopicKey));
+    const resultItem = result.find((res) => res.find((resItem) => resItem.Key === topic.Key));
 
     if (resultItem) {
       resultItem.push(topic);
@@ -156,7 +188,9 @@ function sortTopics(topics: Array<IDisciplineTopic>): Array<Array<IDisciplineTop
   return result.sort((a, b) => a[0]?.Number - b[0]?.Number);
 }
 
-onBeforeMount(async () => {
+async function loadData() {
+  isDataLoading.value = true;
+  isPreventUpload.value = true;
   diffs.value = await api.get('/getSlojnaList').then((res) => res.data.Data);
   discipline.value = await api.get(`/getDisciplines?by=key&id=${route.params.id}`).then((res) => res.data.Data?.[0]);
   nameRef.value.name = discipline.value?.Name ?? '';
@@ -168,6 +202,11 @@ onBeforeMount(async () => {
     title: `Редактирование дисциплины: ${discipline?.value?.Name}`
   })
   isPreventUpload.value = false;
+  isDataLoading.value = false;
+}
+
+onBeforeMount(async () => {
+  await loadData();
 })
 </script>
 
@@ -178,6 +217,7 @@ onBeforeMount(async () => {
   margin: 0 auto;
   margin-top: 24px;
   position: relative;
+  margin-bottom: 16px;
 
   .save-btn {
     position: absolute;
@@ -191,14 +231,30 @@ onBeforeMount(async () => {
     margin-bottom: 24px;
   }
 
+  .topics-list {
+    margin-top: 16px;
+  }
+
   .topic-name {
     display: flex;
     width: 100%;
     justify-content: space-between;
     gap: 16px;
+    margin-bottom: 16px;
+    font-weight: 700;
 
     .q-input {
       width: 100%;
+    }
+  }
+
+  .topics-list__new {
+    div {
+      display: flex;
+    }
+    .q-btn {
+      margin-top: 8px;
+      margin-right: 8px;
     }
   }
 }

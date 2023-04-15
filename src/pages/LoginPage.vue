@@ -26,6 +26,7 @@
               <q-btn 
                 color="secondary"
                 type="submit"
+                :loading="isLogging"
               >
                 Войти
               </q-btn>
@@ -40,13 +41,14 @@
 <script setup lang="ts">
 import { useMeta } from 'quasar';
 import { AuthManager } from 'src/services/auth.service';
-
-import { ref } from 'vue';
+import { RouterGuardManager } from 'src/utils/routerGuard.util';
+import { onBeforeMount, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const email = ref();
 const password = ref();
 const router = useRouter();
+const isLogging = ref(false);
 
 const meta = {
   title: 'Войти в систму',
@@ -55,8 +57,14 @@ const meta = {
 useMeta(meta);
 
 const onSubmit = async () => {
+  isLogging.value = true;
   await AuthManager.login(email.value, password.value, router);
+  isLogging.value = false;
 };
+
+onBeforeMount(() => {
+  RouterGuardManager.useAuthGuard(router);
+})
 </script>
 
 <style lang="scss" scoped>

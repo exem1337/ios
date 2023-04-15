@@ -1,11 +1,12 @@
 <template>
   <q-card class="topics">
-    Список тем
+    <span class="topics--header">Список тем</span> 
     <div 
       v-for="topic in topics"
       :key="topic.TopicKey"
       :class="{ 'selected' : currentTopic === topic.TopicKey }"
       class="topics__item"
+      @click="$emit('select', topic.TopicKey)"
     >
       <div class="topics__item--inner">
         <span>{{ topic.Number }}. {{ topic.Name }}</span>

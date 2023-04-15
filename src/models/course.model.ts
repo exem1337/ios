@@ -14,6 +14,7 @@ export interface IDisciplineTopic {
   Number: number;
   TopicKey: number;
   Topic_Weight: number;
+  Key: number;
 }
 
 export interface IDiscipline {
@@ -29,4 +30,13 @@ export interface IDisciplineDifficulty {
   Key: number;
   Name: string;
   Value?: string;
+}
+
+export interface IDisciplineUser {
+  Key: number;
+  Name: string;
+  Patronymic: string;
+  Role_key: number;
+  Role_Name: string;
+  Surname: string;
 }

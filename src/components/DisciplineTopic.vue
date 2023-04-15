@@ -36,22 +36,31 @@
               :option-value="(option) => option.Key"
               :option-label="(option) => option.Name"
             />
-            <div class="save-btn-wrapper">
+            <div class="btn-wrapper">
+              <div class="save-btn-wrapper">
+                <q-btn
+                  color="secondary"
+                  :disable="!selectedDifficulty?.Key || !newTopicFile"
+                  @click="onCreateTopic"
+                >
+                  Сохранить
+                </q-btn>
+                <q-tooltip
+                  v-if="!selectedDifficulty?.Key || !newTopicFile"  
+                  anchor="top middle" 
+                  color="primary"
+                  self="bottom middle" 
+                  :offset="[10, 10]"
+                >
+                  Необходимо выбрать файл и сложность
+                </q-tooltip>
+              </div>
               <q-btn
                 color="secondary"
-                :disable="!selectedDifficulty?.Key || !newTopicFile"
-                @click="onCreateTopic"
+                @click="isShowNewTopic = false"
               >
-                Сохранить
+                Отменить
               </q-btn>
-              <q-tooltip
-                v-if="!selectedDifficulty?.Key || !newTopicFile"  
-                anchor="top middle" 
-                self="bottom middle" 
-                :offset="[10, 10]"
-              >
-                Необходимо выбрать файл и сложность
-              </q-tooltip>
             </div>
           </div>
           <AppImageUploader
@@ -71,7 +80,7 @@
             <span>Сложность: {{ getDifficulty(topic.Diff_Level_Key) }}</span>
             <q-btn
               color="secondary"
-              @click="onEditTest(topic.Test_Key)"
+              @click="onEditTest(topic.Test_Key, topic.MaterialKey)"
             >
               Редактировать тест
             </q-btn>
@@ -106,6 +115,10 @@ const props = defineProps<{
   getDifficulty: (key: number) => string | undefined;
 }>();
 
+const emits = defineEmits<{
+  (e: 'load'): void;
+}>();
+
 const isOpen = ref(false);
 const router = useRouter();
 const route = useRoute();
@@ -120,18 +133,17 @@ async function onAddMaterial(value: IAddImage) {
     return;
   }
 
-  console.log(value)
   await api.patch(`/editTopicMaterial/${value.model.MaterialKey}`, {
     fileKey: value.fileKey,
   })
 }
 
-function onEditTest(key: number) {
+function onEditTest(key: number, materialKey: number, diffKey: number) {
   if (key) {
     router.push(`/courses/${route.params.id}/edit/test/${key}`);
   }
   else {
-    router.push(`/courses/${route.params.id}/edit/test`);
+    router.push(`/courses/${route.params.id}/edit/${materialKey}/test`);
   }
 }
 
@@ -141,6 +153,7 @@ async function onCreateTopic() {
     diffLevelKey: selectedDifficulty.value.Key,
     topicKey: props.topics?.[0].Key,
   })
+  emits('load');
 }
 </script>
 
@@ -162,13 +175,14 @@ async function onCreateTopic() {
     padding: 16px;
     border-radius: 4px;
     margin-bottom: 8px;
-    background-color: #ffc107;
-    color: #fff;
+    background-color: #ffd998;
+    color: #5d4037;
     font-weight: 500;
     font-size: 1rem;
     cursor: pointer;
     transition: .3s ease;
     position: relative;
+    font-weight: 700;
 
     &--header {
       width: 100%;
@@ -218,6 +232,24 @@ async function onCreateTopic() {
         &--header {
           min-width: 30%;
           margin-right: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          .q-btn {
+            width: fit-content;
+          }
+
+          .btn-wrapper {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+
+            .q-btn {
+              height: 36px;
+              width: fit-content;
+            }
+          }
 
           .save-btn-wrapper {
             width: fit-content;
@@ -246,7 +278,7 @@ async function onCreateTopic() {
     }
 
     &:hover {
-      background-color: lighten(#ffc107, 5%);
+      background-color: lighten(#ffd998, 5%);
     }
 
     &:last-child {

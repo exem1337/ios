@@ -1,5 +1,6 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
+import { Cookies } from 'quasar';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -7,7 +8,14 @@ declare module '@vue/runtime-core' {
   }
 }
 
-const api = axios.create({ baseURL: 'http://localhost:8080/api' });
+const api = axios.create({ 
+  baseURL: 'http://localhost:8080/api',
+  headers: {
+    userKey: Cookies.get('UserKey'),
+    token: Cookies.get('Token'),
+    verify: Cookies.get('Verify'),
+  }
+});
 
 export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios;
