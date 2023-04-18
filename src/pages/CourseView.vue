@@ -1,17 +1,17 @@
 <template>
   <div class="course">
     <div
-      v-if="!isTopicLoading" 
+      v-if="!isTopicLoading && pdfSrc" 
       class="topic-controls shadow"
     >
       <q-btn
-        :disable="currentPage == 0" 
+        :disable="currentPage == 1" 
         icon="remove" 
         color="secondary" 
         round 
         @click="currentPage--"
       />
-      <span>{{ currentPage + 1 }} из {{ numOfPages + 1 }}</span>
+      <span>{{ currentPage }} из {{ numOfPages }}</span>
       <q-btn 
         :disable="currentPage == numOfPages"
         icon="add" 
@@ -28,13 +28,26 @@
       />
       <q-btn
         color="secondary" 
-        :to="`/test/${route.params.id}`"
+        :to="`/test/${currentTopicRef?.Test_Key}`"
+        :disable="!currentTopicRef?.Test_Key"
       >
         Пройти тестирование
       </q-btn>
     </div>
     <div class="course__wrapper">
       <AppLoader v-if="isTopicLoading" />
+      <p 
+        v-else-if="!topics.length"
+        class="course--empty"
+      >
+        К данной дисциплине не прикреплен обучающий материал
+      </p>
+      <div
+        v-else-if="!pdfSrc" 
+        class="no-topic"
+      >
+        Для данной темы не был загружен обучающий материал
+      </div>
       <VuePdf
         v-else
         :key="currentPage"
@@ -49,7 +62,7 @@
 import { VuePdf, createLoadingTask } from 'vue3-pdfjs/esm';
 import { VuePdfPropsType } from 'vue3-pdfjs/components/vue-pdf/vue-pdf-props'; // Prop type definitions can also be imported
 import { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { api } from 'src/boot/axios';
 import { IDisciplineTopic } from 'src/models/course.model';
@@ -66,30 +79,42 @@ const topics = ref<Array<IDisciplineTopic>>([]);
 const currentTopic = ref(1);
 const route = useRoute();
 const currentPage = ref(0);
-const isTopicLoading = ref(true);
+const isTopicLoading = ref(false);
+const currentTopicRef = computed(() => topics.value.find((topic) => topic.Key === currentTopic.value));
 
-function onTopicSelect(key: number) {
+async function onTopicSelect(key: number) {
   currentTopic.value = key;
+  await loadTopic(currentTopicRef.value?.File_Link || '');
 }
 
 async function loadTopic(fileUrl: string) {
+  if (!fileUrl) {
+    pdfSrc.value = '';
+    return;
+  }
+
   isTopicLoading.value = true;
   const file = await FileService.getFile(fileUrl, 'application/pdf')
   const url = URL.createObjectURL(file)
   pdfSrc.value = url;
-  console.log(url)
   const loadingTask = createLoadingTask(pdfSrc.value);
   loadingTask.promise.then((pdf: PDFDocumentProxy) => {
     numOfPages.value = pdf.numPages;
   });
+  currentPage.value = 1;
   isTopicLoading.value = false;
 }
 
 onMounted(async () => {
   topics.value = await api.get<IBasedResponse<Array<IDisciplineTopic>>>(`/getTopics?discipline=${route.params.id}`)
-    .then((res) => res.data.Data.sort((a, b) => a.Number - b.Number));
+    .then((res) => res.data.Data.sort((a, b) => a.Number - b.Number).filter((topic) => topic.Diff_Level_Key));
+
+  if (!topics.value.length) {
+    return;
+  }
+ 
   await loadTopic(topics.value?.[0].File_Link);
-  
+  currentTopic.value = topics.value[0]?.Key;
 });
 </script>
 
@@ -105,6 +130,15 @@ onMounted(async () => {
     flex-direction: column;
     gap: 16px;
     margin-left: 16px;
+  }
+
+  &--empty {
+    font-size: 24px;
+    font-weight: 500;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 240px;
   }
 
   .topic-controls {
@@ -123,7 +157,7 @@ onMounted(async () => {
     span {
       font-weight: 500;
       font-size: 16px;
-      color: #5d4037;
+      color: #fff;
     }
   }
 
@@ -132,6 +166,15 @@ onMounted(async () => {
     margin-left: 16px;
     margin-right: 16px;
     position: relative;
+
+    .no-topic {
+      margin: 0 auto;
+      margin-top: 204px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      font-size: 24px;
+    }
 
     .vue-pdf-main {
       min-height: 100vh;

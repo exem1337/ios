@@ -1,25 +1,38 @@
-import { ITestQuestion, ITestUserAnswer } from 'src/models/test.model';
+import { api } from "src/boot/axios";
+import { ITestResponse } from "src/models/test.model";
+import { FileService } from "./file.service";
+import { Router } from "vue-router";
+import { Notify } from "quasar";
 
-export class TestManager {
-  public checkTestCorrectivity(
-    questions: Array<ITestQuestion>,
-    answers: Array<ITestUserAnswer>
-  ): number {
-    const correctCount = answers?.reduce((acc, ans) => {
-      const question: ITestQuestion | undefined =
-        questions.find((question) => question.id === ans.questionId) ||
-        undefined;
+export class TestService {
+  static async getTest(key: number, router: Router): Promise<ITestResponse> {
+    const test = await api.get(`/getTest/${key}`).then((res) => res.data?.Data)
+    test.Questions = await Promise.all(test.Questions.map(async (question) => {
+      const answer = await Promise.all(question.Answer?.map(async (ans) => {
+        let file = null;
+        if (ans.Img?.File) {
+          file = await FileService.getFileBase64(ans.Img.File)
+        }
 
-      if (!question) {
-        return acc;
+        return {
+          ...ans,
+          Img: file,
+        }
+      }))
+      
+      let Img = null;
+
+      if (question.Img?.File) {
+        Img = await FileService.getFileBase64(question.Img.File);
       }
-
-      return question.answers.find((qAns) => qAns.id === ans.answerId)
-        ?.isCorrect
-        ? acc + 1
-        : acc;
-    }, 0);
-
-    return (correctCount / questions.length) * 100;
+      
+      return {
+        ...question,
+        Img,
+        Answer: answer
+      }
+    }))
+    
+    return test;
   }
 }

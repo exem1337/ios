@@ -104,7 +104,7 @@ async function onCreate() {
 }
 
 onBeforeMount(async () => {
-  loadData();
+  await loadData();
 })
 </script>
 

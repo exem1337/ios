@@ -4,14 +4,14 @@
     <div 
       v-for="topic in topics"
       :key="topic.TopicKey"
-      :class="{ 'selected' : currentTopic === topic.TopicKey }"
+      :class="{ 'selected' : currentTopic === topic.Key }"
       class="topics__item"
-      @click="$emit('select', topic.TopicKey)"
+      @click="$emit('select', topic.Key)"
     >
       <div class="topics__item--inner">
         <span>{{ topic.Number }}. {{ topic.Name }}</span>
         <q-icon 
-          v-if="currentTopic === topic.TopicKey"
+          v-if="currentTopic === topic.Key"
           name="done" 
         />
       </div>

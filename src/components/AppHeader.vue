@@ -54,6 +54,7 @@
 </template>
 
 <script lang="ts" setup>
+import { AuthManager } from 'src/services/auth.service';
 import { useUserStore } from 'src/stores/userStore';
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -64,8 +65,7 @@ const router = useRouter();
 const route = useRoute();
 
 const onLogout = () => {
-  userStore.clearUser();
-  router.push('/');
+  AuthManager.logout(userStore, router);
 };
 </script>
 

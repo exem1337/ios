@@ -14,17 +14,26 @@
         :class="{ 'open' : isOpen }" 
         class="topics-list__topic--content"
       >
-        <q-btn 
-          v-if="!isShowNewTopic"
-          :disable="!selectItems.length"
-          color="primary"
-          class="btn-add-new"
-          @click="isShowNewTopic = true"
-        >
-          Добавить обучающий материал с новой сложностью
-        </q-btn>
+        <div class="topics-list__topic--content__buttons">
+          <q-btn 
+            v-if="!isShowNewTopic"
+            :disable="!selectItems.length"
+            color="primary"
+            class="btn-add-new"
+            @click="isShowNewTopic = true"
+          >
+            Добавить обучающий материал с новой сложностью
+          </q-btn>
+          <q-btn 
+            color="primary"
+            class="btn-add-new"
+            @click="onDeleteTopic(topics?.[0]?.Key)"
+          >
+            Удалить тему
+          </q-btn>
+        </div>
         <div
-          v-else 
+          v-if="isShowNewTopic" 
           class="topics-list__topic--content__item"
         >
           <div class="topics-list__topic--content__item--header">
@@ -147,6 +156,11 @@ function onEditTest(key: number, materialKey: number, diffKey: number) {
   }
 }
 
+async function onDeleteTopic(key: number) {
+  await api.delete(`/deleteTopic/${key}`);
+  emits('load');
+}
+
 async function onCreateTopic() {
   await api.post('/postTopicMaterial', {
     fileKey: newTopicFile.value,
@@ -207,6 +221,12 @@ async function onCreateTopic() {
       -o-transition: height .3s ease;
       transition: height .3s ease;
       overflow: hidden;
+
+      &__buttons {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
 
       .btn-add-new {
         margin-top: 16px;

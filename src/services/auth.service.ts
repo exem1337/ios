@@ -20,6 +20,8 @@ export class AuthManager {
     Cookies.set('Verify', user.UserData.Verify);
     Cookies.set('UserKey', user.UserData.UserKey.toString());
 
+    console.log('Cookies', Cookies.get('Token'))
+
     const userInfo = await api.get<IBasedResponse<IUserInfoResponse>>(
       `/userInfo/${user?.UserData?.UserKey}`,
       {
@@ -50,8 +52,9 @@ export class AuthManager {
     router.push('/courses');
   } 
 
-  static logout(store: Store<'user', { user: IUser }>, router: Router): void {
-    store.logout();
+  static logout(store: Store<'userStore', { user: IUser }>, router: Router): void {
+    const ustore = useUserStore();
+    ustore.logout();
     Cookies.remove('Token');
     Cookies.remove('Verify');
     Cookies.remove('UserKey')
