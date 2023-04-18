@@ -20,8 +20,6 @@ export class AuthManager {
     Cookies.set('Verify', user.UserData.Verify);
     Cookies.set('UserKey', user.UserData.UserKey.toString());
 
-    console.log('Cookies', Cookies.get('Token'))
-
     const userInfo = await api.get<IBasedResponse<IUserInfoResponse>>(
       `/userInfo/${user?.UserData?.UserKey}`,
       {

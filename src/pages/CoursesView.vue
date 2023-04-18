@@ -60,7 +60,6 @@
 </template>
 
 <script lang="ts" setup>
-import { Cookies } from 'quasar';
 import { api } from 'src/boot/axios';
 import { ICourse } from 'src/models/course.model';
 import { useUserStore } from 'src/stores/userStore';
