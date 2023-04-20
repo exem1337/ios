@@ -3,6 +3,7 @@ import { ITestResponse } from "src/models/test.model";
 import { FileService } from "./file.service";
 import { Router } from "vue-router";
 import { Notify } from "quasar";
+import { IEduTime } from "src/models/fuzzy.model";
 
 export class TestService {
   static async getTest(key: number, router: Router): Promise<ITestResponse> {
@@ -34,5 +35,18 @@ export class TestService {
     }))
     
     return test;
+  }
+
+  static getEduTimeDelta(edu: Array<IEduTime>) {
+    console.log(edu)
+    const sum = edu.reduce((acc, val) => acc += val.Time, 0);
+    const res = 50 * sum / 3600;
+    return res > 100 ? 100 : res;
+  }
+
+  static getAnswerTimeDelta(time: Array<number>) {
+    const sum = time.reduce((acc, val) => acc += val, 0);
+    const res = 50 * sum / 300;
+    return res > 100 ? 100 : res;
   }
 }

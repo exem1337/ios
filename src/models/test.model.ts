@@ -72,3 +72,8 @@ export interface IAddImage {
   model: any;
   fileKey: string;
 }
+
+export interface ITestComplete {
+  correct: number;
+  time: Array<number>;
+}

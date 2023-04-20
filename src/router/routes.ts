@@ -12,6 +12,18 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/CourseView.vue'),
       },
       {
+        path: '/expert',
+        component: () => import('src/pages/ExpertPage.vue'),
+      },
+      {
+        path: '/expert/rules/:id',
+        component: () => import('src/pages/RuleEdit.vue'),
+      },
+      {
+        path: '/expert/rules',
+        component: () => import('src/pages/RuleEdit.vue'),
+      },
+      {
         path: '/courses/:id/edit',
         component: () => import('pages/CourseEdit.vue'),
       },
@@ -40,7 +52,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/AboutPage.vue'),
       },
       {
-        path: '/test/:id',
+        path: '/test/:id/:materialId',
         component: () => import('src/pages/TestPage.vue'),
       },
       {

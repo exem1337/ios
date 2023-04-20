@@ -10,11 +10,15 @@ import { Router } from 'vue-router';
 export class AuthManager {
   static async login(Email: string, Password: string, router: Router): Promise<void> {
     const store = useUserStore();
-
     const user = await api.post<IBasedResponse<IAuthResponse>>('/login', {
       Email,
       Password
     }).then((res) => res.data.Data);
+    // await api.post('/addEduTime', {
+    //   time: 3600, //key 4
+    //   physKey: user.UserData.UserKey,
+    //   topicMaterialKey: 26,
+    // })
 
     Cookies.set('Token', user.Token);
     Cookies.set('Verify', user.UserData.Verify);

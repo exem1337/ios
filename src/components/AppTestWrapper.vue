@@ -36,16 +36,20 @@
 <script lang="ts" setup>
 import { api } from 'src/boot/axios';
 import AppTest from 'src/components/AppTest.vue';
-import { ITest } from 'src/models/test.model';
-import { ref } from 'vue';
+import { ITest, ITestComplete } from 'src/models/test.model';
+import { onBeforeMount, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import FuzzyResult from 'components/FuzzyResult.vue';
 import AppModal from 'components/AppModal.vue'
 import { IModalProps } from 'src/models/modal.model';
 import { useUserStore } from 'src/stores/userStore';
+import { IEduTime } from 'src/models/fuzzy.model';
+import { TestService } from 'src/services/test.service';
+import { difficultyMap } from 'src/constants/difficultyMap.const';
 
 const props = defineProps<{
   test: ITest;
+  eduTime: Array<IEduTime>;
 }>()
 
 const modalProps: IModalProps = {
@@ -66,23 +70,34 @@ function onReturnToDisciplines() {
   router.push('/disciplines');
 }
 
-async function onTestCompleted(correct: number) {
+async function onTestCompleted(result: ITestComplete) {
+  const testEduDelta = TestService.getEduTimeDelta(props.eduTime);
+  const answerTimeDelta = TestService.getAnswerTimeDelta(result.time);
+
   await api.post('/submitResult', {
-    result: `${correct}/${props.test.Questions?.length}`,
+    result: `${result.correct}/${props.test.Questions?.length}`,
     physKey: store.getUser.id,
-    testKey: props.test.Key,
-    discipKey: Number(route.params.id),
+    testKey: Number(route.params.id),
+    discipKey: props.test.Discipline?.Key,
   })
   isShowBanner.value = true;
-  // await getBannerData();
+  const correctPercentage = Math.round(result.correct / props.test.Questions?.length * 100);
+  await getBannerData(testEduDelta, answerTimeDelta, correctPercentage);
 }
 
-async function getBannerData() {
-  currentStatus.value = await api.get(`/getFuzzyResult?physKey=${store.getUser.id}&disciplineKey=${route.params.id}`);
-  console.log(currentStatus.value)
+async function getBannerData(test: number, answer: number, correct: number) {
+  const key = await api.post('/addEduTime', {
+    time: props.eduTime.reduce((acc, val) => acc += val.Time, 0), 
+    physKey: store.getUser.id,
+    topicMaterialKey: route.params.materialId,
+  }).then((res) => res.data.Data.Key)
+
+  const diff = difficultyMap.get(props.test.IosDifficulty.Name.toLowerCase());
+  currentStatus.value = await api.get(`/fuzzyResult?ios=true&physKey=${store.getUser.id}&disciplineKey=${props.test.Discipline?.Key}&eduTimeKey=${key}&t1=${diff}&t2=90&t3=${correct}&t4=${test}`);
+  console.log(`/fuzzyResult&ios=true&physKey=${store.getUser.id}&disciplineKey=${props.test.Discipline?.Key}&eduTimeKey=${key}&t1=${diff}&t2=${answer}&t3=${correct}&t4=${test}`)
   const ruleGraphs = [];
   const rules = Object.keys(currentStatus.value).filter((key) => key.includes('RuleId'));
-  console.log(rules)
+ 
   rules.forEach((rule) => {
     ruleGraphs.push({ x: [...currentStatus.value[rule][0]], y: [...currentStatus.value[rule][1]] });
   })
@@ -93,6 +108,10 @@ async function getBannerData() {
     graphs: ruleGraphs
   }
 }
+
+onBeforeMount(async () => {
+  const result = await api.get('/fuzzyResult?ios=true&physKey=3&disciplineKey=1&eduTimeKey=4&t1=25&t2=50&t3=67&t4=80');
+})
 </script>
 
 <style lang="scss" scoped>

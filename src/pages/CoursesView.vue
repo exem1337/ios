@@ -32,7 +32,10 @@
             Результаты 
           </q-btn>
         </q-item>
-        <q-item class="courses__wrapper--item bg-amber-1 shadow-2 new">
+        <q-item
+          v-if="store.isExpert" 
+          class="courses__wrapper--item bg-amber-1 shadow-2 new"
+        >
           <div>
             <p class="courses__wrapper--item__heading">Новая дисциплина</p>
             <div class="courses__wrapper--item__description">

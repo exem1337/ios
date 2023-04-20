@@ -49,3 +49,10 @@ export interface IDifficulty {
   Key: number;
   
 }
+
+export interface IEduTime {
+  Key: number;
+  Phys_Key: number;
+  Time: number;
+  Topic_Material_Key: number;
+}

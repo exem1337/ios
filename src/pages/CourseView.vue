@@ -28,7 +28,7 @@
       />
       <q-btn
         color="secondary" 
-        :to="`/test/${currentTopicRef?.Test_Key}`"
+        :to="`/test/${currentTopicRef?.Test_Key}/${currentTopicRef?.MaterialKey}`"
         :disable="!currentTopicRef?.Test_Key"
       >
         Пройти тестирование

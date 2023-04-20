@@ -48,20 +48,22 @@
 
 <script lang="ts" setup>
 import { api } from 'src/boot/axios';
-import { ITest } from 'src/models/test.model';
-import { ref } from 'vue';
+import { ITest, ITestComplete } from 'src/models/test.model';
+import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
   test: ITest;
 }>();
 
 const emits = defineEmits<{
-  (e: 'comleted', value: number): void;
+  (e: 'comleted', value: ITestComplete): void;
 }>()
 
 const currentAnswer = ref();
 const currentQuestionKey = ref(0);
 const rightAnswers = ref(0);
+const startDate = ref();
+const answerTimes = ref<Array<number>>([])
 
 async function onAnswer() {
   const result = await api.get(`/validateAnswer?questionKey=${props.test.Questions?.[currentQuestionKey.value].Key}&answerKey=${currentAnswer.value}`)
@@ -71,10 +73,19 @@ async function onAnswer() {
   }
   currentAnswer.value = null;
   if (currentQuestionKey.value + 1 === props.test.Questions?.length) {
-    emits('comleted', rightAnswers.value);
+    emits('comleted', { 
+      correct: rightAnswers.value,
+      time: answerTimes.value
+    });
   }
+  answerTimes.value.push((new Date().getTime() - startDate.value.getTime()) / 1000);
   currentQuestionKey.value++;
+  startDate.value = new Date();
 }
+
+onMounted(() => {
+  startDate.value = new Date();
+})
 </script>
 
 <style lang="scss" scoped>
