@@ -99,7 +99,7 @@ async function getBannerData(test: number, answer: number, correct: number) {
   }).then((res) => res.data.Data.Key)
 
   const diff = difficultyMap.get(props.test.IosDifficulty.Name.toLowerCase());
-  currentStatus.value = await api.get(`/fuzzyResult?ios=true&physKey=${store.getUser.id}&disciplineKey=${props.test.Discipline?.Key}&eduTimeKey=${key}&t1=${diff}&t2=${answer}&t3=${correct}&t4=${test}`);
+  currentStatus.value = await api.get(`/fuzzyResult?ios=true&physKey=${store.getUser.id}&disciplineKey=${props.test.Discipline?.Key}&eduTimeKey=${key}&t1=${diff}&t2=${answer}&t3=${correct}&t4=${test}`).then((res) => res.data.Data);
   // currentStatus.value = STATUS_RESULT;
   const ruleGraphs = [];
   const rules = Object.keys(currentStatus.value).filter((key) => key.includes('RuleId'));
