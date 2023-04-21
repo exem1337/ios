@@ -58,6 +58,7 @@
                   v-if="!selectedDifficulty?.Key || !newTopicFile"  
                   anchor="top middle" 
                   color="primary"
+                  class="bg-brown-7"
                   self="bottom middle" 
                   :offset="[10, 10]"
                 >

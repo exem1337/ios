@@ -10,12 +10,20 @@
           v-for="(course, key) in disciplines"
           :key="key"
           class="courses__wrapper--item bg-amber-1 shadow-2"
+          :class="{ 'disabled' : !store.isExpert && !course.status }"
         >
-          <div @click="onGoToCourse(course.Key)">
+          <q-tooltip 
+            v-if="!store.isExpert && !course.status"
+            class="bg-brown-7"
+          >
+            Прежде чем начать просмотр дисциплины, получите ее статус
+          </q-tooltip>
+          <div @click="onGoToCourse(course)">
             <p class="courses__wrapper--item__heading">{{ course?.Name }}</p>
             <p class="courses__wrapper--item__description">
               {{ course?.ShName }}
             </p>
+            <span v-if="!store.isExpert">Статус: {{ course.status?.Status || 'не определен' }}</span>
           </div>
           <q-btn
             v-if="store.isExpert"
@@ -85,8 +93,12 @@ function onGoToResults(id: number) {
   router.push(`/courses/${id}/results`);
 };
 
-function onGoToCourse(id: number) {
-  router.push(`/courses/${id}`);
+function onGoToCourse(discipline: ICourse) {
+  if (store.isExpert || !discipline.status) {
+    return;
+  }
+
+  router.push(`/courses/${discipline.Key}`);
 }
 
 async function loadData() {
@@ -94,6 +106,17 @@ async function loadData() {
   disciplines.value = await api.get('/getMyDisciplines').then((res) => res.data.Data);
   newDisciplineDesc.value = '';
   newDisciplineName.value = '';
+
+  if (store.isExpert) {
+    isDataLoading.value = false;
+    return;
+  }
+
+  disciplines.value = await Promise.all(disciplines.value?.map(async (disc) => ({
+    ...disc,
+    status: await api.get(`/getStoredStatusIos?physKey=${store.getUser.id}&disciplineKey=${disc.Key}&last=true`).then((res) => res.data.Data),
+  })))
+
   isDataLoading.value = false;
 }
 
@@ -132,6 +155,11 @@ onBeforeMount(async () => {
     border-radius: 8px;
     transition: $transition;
     min-height: 120px;
+    cursor: pointer;
+
+    > div {
+      width: 100%;
+    }
 
     &.new {
       > div {
@@ -158,6 +186,7 @@ onBeforeMount(async () => {
       font-size: 20px;
       line-height: 28px;
       margin-bottom: 12px;
+      max-width: 75%;
     }
 
     &__description {

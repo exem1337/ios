@@ -22,6 +22,7 @@
       <q-tooltip
         anchor="top middle" 
         color="primary"
+        class="bg-brown-7"
         self="bottom middle" 
         :offset="[10, 10]"
       >
@@ -150,6 +151,8 @@ async function onThemeCreate() {
     Discip_Key: Number(route.params.id), 
   })
   await loadData();
+  isShowNewTheme.value = false;
+  newThemeName.value = '';
 }
 
 async function onAddTopicMaterial(salt: Ref<string>) {

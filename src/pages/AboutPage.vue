@@ -1,48 +1,30 @@
 <template>
   <div class="container">
     <div class="about">
-      <h4 class="grey-text text-darken-2 headText z-depth-3">Справка</h4>
-      <div
-        class="card horizontal editContainer z-depth-3 white darken-2 about"
-        style="margin-top: 0; position: relative; z-index: 2"
-      >
-        <h4>О программе</h4>
-        <h5>Работа с моделью студента</h5>
-        <p>
-          Модель студента состоит из лингвистических переменных, формирующих
-          общее представление о студенте. Эти переменные составляют правила, по
-          которым определяется статус.
-        </p>
-        <p>
-          Для перехода в модель студента наведите на пункт "Экспертная система"
-          и выберите соответсвующий пункт в выпадающем меню.
-        </p>
-        <p>
-          При добавлении лингвистической переменной требуется редактировать все
-          правила в базе правил.
-        </p>
-        <p>
-          При удалении лингвистической переменной во всех правилах произойдет
-          удаление условий по этой переменной.
-        </p>
-        <h5>Работа с базой правил</h5>
-        <p>
-          В базе правил хранится список высказываний, состоящих условий. Условие
-          в свою очередь указывает лингвистическую переменную и терм, который
-          будет проверяться в правиле.
-        </p>
-        <p>
-          Для перехода в базу правил, наведите на пункт "Экспертная система" и
-          выберите соответсвующий пункт в выпадающем меню.
-        </p>
-        <p>
-          При добавлении правила требуется выбрать нужный терм для каждой
-          лингвистической пременной, после чего указать соответствующий
-          парамерты, название и краткое название.
-        </p>
-      </div>
+      <h4>Справка</h4> 
+      <ExpertAbout v-if="store.isExpert" />
+      <StudentAbout v-else />   
     </div>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useUserStore } from 'src/stores/userStore';
+import ExpertAbout from 'components/about/ExpertAbout.vue';
+import StudentAbout from 'components/about/StudentAbout.vue';
+
+const store = useUserStore();
+</script>
+
+<style lang="scss" scoped>
+.about {
+  h4 {
+    font-size: 24px;
+    height: fit-content;  
+    width: fit-content;
+    margin: 0 auto;
+    color: #616161;
+    margin-bottom: 16px;
+  }
+}
+</style>

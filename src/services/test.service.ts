@@ -1,12 +1,10 @@
 import { api } from "src/boot/axios";
 import { ITestResponse } from "src/models/test.model";
 import { FileService } from "./file.service";
-import { Router } from "vue-router";
-import { Notify } from "quasar";
 import { IEduTime } from "src/models/fuzzy.model";
 
 export class TestService {
-  static async getTest(key: number, router: Router): Promise<ITestResponse> {
+  static async getTest(key: number): Promise<ITestResponse> {
     const test = await api.get(`/getTest/${key}`).then((res) => res.data?.Data)
     test.Questions = await Promise.all(test.Questions.map(async (question) => {
       const answer = await Promise.all(question.Answer?.map(async (ans) => {
@@ -20,27 +18,27 @@ export class TestService {
           Img: file,
         }
       }))
-      
+
       let Img = null;
 
       if (question.Img?.File) {
         Img = await FileService.getFileBase64(question.Img.File);
       }
-      
+
       return {
         ...question,
         Img,
         Answer: answer
       }
     }))
-    
+
     return test;
   }
 
   static getEduTimeDelta(edu: Array<IEduTime>) {
-    console.log(edu)
     const sum = edu.reduce((acc, val) => acc += val.Time, 0);
     const res = 50 * sum / 3600;
+    console.log(sum, res)
     return res > 100 ? 100 : res;
   }
 

@@ -40,3 +40,13 @@ export interface IDisciplineUser {
   Role_Name: string;
   Surname: string;
 }
+
+export interface ICourseResult {
+  Date_Submitted: string;
+  Difficulty: string;
+  Name: string;
+  Patronymic: string;
+  Result: string;
+  Surname: string;
+  TestName: string;
+}

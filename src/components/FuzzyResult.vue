@@ -28,14 +28,15 @@ const props = defineProps<{
   componentProps: IFuzzyResult;
 }>()
 Chart.register(...registerables);
+console.log(props.componentProps)
 const mainData = {
   labels: props.componentProps.resultFunc.x,
   datasets: [
     {
       label: 'Результатирующая функция',
       data: props.componentProps.resultFunc.y,
-      backgroundColor: '#1976D2',
-      borderColor: '#1976D2',
+      backgroundColor: '#5d4037',
+      borderColor: '#5d4037',
     },
     {
       label: 'Результат',
@@ -53,8 +54,8 @@ const otherData = props.componentProps.graphs.map((el) => ({
     {
       label: 'правило',
       data: el.y,
-      backgroundColor: '#1976D2',
-      borderColor: '#1976D2',
+      backgroundColor: '#5d4037',
+      borderColor: '#5d4037',
     },
     {
       label: 'Результат',

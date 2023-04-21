@@ -26,13 +26,28 @@
         :current-topic="currentTopic"
         @select="onTopicSelect"
       />
-      <q-btn
-        color="secondary" 
-        :to="`/test/${currentTopicRef?.Test_Key}/${currentTopicRef?.MaterialKey}`"
-        :disable="!currentTopicRef?.Test_Key"
-      >
-        Пройти тестирование
-      </q-btn>
+      <div>
+        <q-tooltip
+          v-if="!currentTopicRef?.Test_Key"
+          class="bg-brown-8"
+        >
+          Для данной темы не был добавлен тестовый материал
+        </q-tooltip>
+        <q-tooltip
+          v-else-if="isCurrentTestDisabled"
+          class="bg-brown-8"
+        >
+          Данный тест уже пройден
+        </q-tooltip>
+        <q-btn
+          color="secondary" 
+          :to="`/test/${currentTopicRef?.Test_Key}/${currentTopicRef?.MaterialKey}`"
+          :disable="!currentTopicRef?.Test_Key || isCurrentTestDisabled"
+        >
+          Пройти тестирование
+        </q-btn>
+        
+      </div>
     </div>
     <div class="course__wrapper">
       <AppLoader v-if="isTopicLoading" />
@@ -65,11 +80,13 @@ import { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 import { onMounted, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { api } from 'src/boot/axios';
-import { IDisciplineTopic } from 'src/models/course.model';
+import { IDisciplineDifficulty, IDisciplineTopic } from 'src/models/course.model';
 import { IBasedResponse } from 'src/models/api.model';
 import TopicList from 'components/TopicList.vue';
 import { FileService } from 'src/services/file.service';
 import AppLoader from 'components/AppLoader.vue';
+import { useUserStore } from 'src/stores/userStore';
+import { IUserStatus } from '../models/user.model';
 
 const pdfSrc = ref<VuePdfPropsType['src']>(
   // 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf'
@@ -81,10 +98,20 @@ const route = useRoute();
 const currentPage = ref(0);
 const isTopicLoading = ref(false);
 const currentTopicRef = computed(() => topics.value.find((topic) => topic.Key === currentTopic.value));
+const isCurrentTestDisabled = ref(false);
+const store = useUserStore();
+const testResults = ref();
 
 async function onTopicSelect(key: number) {
   currentTopic.value = key;
   await loadTopic(currentTopicRef.value?.File_Link || '');
+
+  if (!currentTopicRef.value?.Test_Key) {
+    isCurrentTestDisabled.value = true;
+    return;
+  }
+
+  isCurrentTestDisabled.value = testResults.value?.find((test) => test.Test_Key === currentTopicRef.value?.Test_Key);
 }
 
 async function loadTopic(fileUrl: string) {
@@ -112,9 +139,16 @@ onMounted(async () => {
   if (!topics.value.length) {
     return;
   }
- 
+
+  const status: IUserStatus = await api.get(`/getStoredStatusIos?physKey=${store.getUser.id}&disciplineKey=${route.params.id}&last=true`).then((res) => res.data.Data);
+  const diffs: Array<IDisciplineDifficulty> = await api.get('/getSlojnaList').then((res) => res.data.Data);
+  const diffKey = diffs.find((el) => el.Name?.toLowerCase() === status.Status.toLowerCase())?.Key;
+  topics.value = topics.value.filter((el) => el.Diff_Level_Key === diffKey);  
+
   await loadTopic(topics.value?.[0].File_Link);
   currentTopic.value = topics.value[0]?.Key;
+  testResults.value = await api.get(`getTestResults/${store.getUser.id}`).then((res) => res.data.Data);
+  isCurrentTestDisabled.value = !!testResults.value?.find((res) => res.Test_Key === topics.value[0]?.Test_Key)
 });
 </script>
 

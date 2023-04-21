@@ -13,7 +13,8 @@
     Ващ результат: {{ prop?.resultTerm }}
     <q-btn
       color="primary"
-      @click="isShowModal = true"
+      :loading="isButtonLoading"
+      @click="onShowModal"
     >
       Подробнее
     </q-btn>
@@ -29,6 +30,7 @@
     v-model="isShowModal" 
     :options="modalProps" 
     :componentProps="prop"
+    @show="isButtonLoading = false"
     @close="isShowModal = false"
   />
 </template>
@@ -46,6 +48,7 @@ import { useUserStore } from 'src/stores/userStore';
 import { IEduTime } from 'src/models/fuzzy.model';
 import { TestService } from 'src/services/test.service';
 import { difficultyMap } from 'src/constants/difficultyMap.const';
+// import { STATUS_RESULT } from 'src/constants/statusResult.const';
 
 const props = defineProps<{
   test: ITest;
@@ -65,14 +68,18 @@ const route = useRoute();
 const router = useRouter();
 const currentStatus = ref();
 const prop = ref();
+const isButtonLoading = ref(false);
+const testEduDelta = ref();
+const answerTimeDelta = ref();
+const correctPercentage = ref();
 
 function onReturnToDisciplines() {
-  router.push('/disciplines');
+  router.push('/courses');
 }
 
 async function onTestCompleted(result: ITestComplete) {
-  const testEduDelta = TestService.getEduTimeDelta(props.eduTime);
-  const answerTimeDelta = TestService.getAnswerTimeDelta(result.time);
+  testEduDelta.value = TestService.getEduTimeDelta(props.eduTime);
+  answerTimeDelta.value = TestService.getAnswerTimeDelta(result.time);
 
   await api.post('/submitResult', {
     result: `${result.correct}/${props.test.Questions?.length}`,
@@ -80,9 +87,8 @@ async function onTestCompleted(result: ITestComplete) {
     testKey: Number(route.params.id),
     discipKey: props.test.Discipline?.Key,
   })
+  correctPercentage.value = Math.round(result.correct / props.test.Questions?.length * 100);
   isShowBanner.value = true;
-  const correctPercentage = Math.round(result.correct / props.test.Questions?.length * 100);
-  await getBannerData(testEduDelta, answerTimeDelta, correctPercentage);
 }
 
 async function getBannerData(test: number, answer: number, correct: number) {
@@ -93,13 +99,19 @@ async function getBannerData(test: number, answer: number, correct: number) {
   }).then((res) => res.data.Data.Key)
 
   const diff = difficultyMap.get(props.test.IosDifficulty.Name.toLowerCase());
-  currentStatus.value = await api.get(`/fuzzyResult?ios=true&physKey=${store.getUser.id}&disciplineKey=${props.test.Discipline?.Key}&eduTimeKey=${key}&t1=${diff}&t2=90&t3=${correct}&t4=${test}`);
-  console.log(`/fuzzyResult&ios=true&physKey=${store.getUser.id}&disciplineKey=${props.test.Discipline?.Key}&eduTimeKey=${key}&t1=${diff}&t2=${answer}&t3=${correct}&t4=${test}`)
+  currentStatus.value = await api.get(`/fuzzyResult?ios=true&physKey=${store.getUser.id}&disciplineKey=${props.test.Discipline?.Key}&eduTimeKey=${key}&t1=${diff}&t2=${answer}&t3=${correct}&t4=${test}`);
+  // currentStatus.value = STATUS_RESULT;
   const ruleGraphs = [];
   const rules = Object.keys(currentStatus.value).filter((key) => key.includes('RuleId'));
  
   rules.forEach((rule) => {
-    ruleGraphs.push({ x: [...currentStatus.value[rule][0]], y: [...currentStatus.value[rule][1]] });
+    const ruleItem = { x: [...currentStatus.value[rule][0]], y: [...currentStatus.value[rule][1]] };
+
+    for (let i = ruleItem.x.length - 1; i >= 0; i--) {
+      if (ruleItem.y[i] > 0 && ((ruleItem.x[i+1] && ruleItem.x[i+1] >= currentStatus.value.Result && ruleItem.x[i-1] < currentStatus.value.Result))) {
+        ruleGraphs.push(ruleItem);
+      }
+    }
   })
   prop.value = {
     result: currentStatus.value.Result,
@@ -107,6 +119,12 @@ async function getBannerData(test: number, answer: number, correct: number) {
     resultFunc: currentStatus.value.ResultFunc,
     graphs: ruleGraphs
   }
+}
+
+async function onShowModal() {
+  isButtonLoading.value = true;
+  await getBannerData(testEduDelta.value, answerTimeDelta.value, correctPercentage.value);
+  isShowModal.value = true;
 }
 
 onBeforeMount(async () => {

@@ -1,6 +1,7 @@
 <template>
   <q-dialog 
     v-model="isShowModal"
+    @show="$emit('show')"
     @hide="$emit('close')"
   >
     <q-card>
@@ -19,6 +20,7 @@
       <component
         v-if="options.component" 
         :is="options.component"
+        :component-props="componentProps"
         v-model="componentModelValue"
         @valid="isValid = $event"
       />
@@ -47,11 +49,13 @@ import { ref, watch } from 'vue';
 const props = defineProps<{
   modelValue: boolean;
   options: IModalProps;
+  componentProps?: any;
 }>();
 
 const emits = defineEmits<{
   (e: 'close'): void;
   (e: 'ok', value: any): void;
+  (e: 'show'): void;
 }>()
 
 const isShowModal = ref();
