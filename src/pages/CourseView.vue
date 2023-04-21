@@ -77,7 +77,7 @@
 import { VuePdf, createLoadingTask } from 'vue3-pdfjs/esm';
 import { VuePdfPropsType } from 'vue3-pdfjs/components/vue-pdf/vue-pdf-props'; // Prop type definitions can also be imported
 import { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { api } from 'src/boot/axios';
 import { IDisciplineDifficulty, IDisciplineTopic } from 'src/models/course.model';
@@ -101,8 +101,20 @@ const currentTopicRef = computed(() => topics.value.find((topic) => topic.Key ==
 const isCurrentTestDisabled = ref(false);
 const store = useUserStore();
 const testResults = ref();
+const startTime = ref();
+
+async function logTime() {
+  const timeToLog = (new Date().getTime() - startTime.value.getTime()) / 1000;
+  await api.post('/addEduTime', {
+    time: timeToLog, 
+    physKey: store.getUser.id,
+    topicMaterialKey: currentTopicRef.value?.MaterialKey,
+  });
+  startTime.value = new Date();
+}
 
 async function onTopicSelect(key: number) {
+  await logTime();
   currentTopic.value = key;
   await loadTopic(currentTopicRef.value?.File_Link || '');
 
@@ -149,7 +161,12 @@ onMounted(async () => {
   currentTopic.value = topics.value[0]?.Key;
   testResults.value = await api.get(`getTestResults/${store.getUser.id}`).then((res) => res.data.Data);
   isCurrentTestDisabled.value = !!testResults.value?.find((res) => res.Test_Key === topics.value[0]?.Test_Key)
+  startTime.value = new Date();
 });
+
+onBeforeUnmount(async () => {
+  await logTime();
+})
 </script>
 
 <style lang="scss" scoped>
