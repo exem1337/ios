@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onBeforeUpdate, onMounted } from 'vue';
+import { onBeforeMount, onBeforeUpdate } from 'vue';
 // import { FuzzyService } from 'src/services/fuzzy.service';
 // import { EFuzzyStatuses } from './enums/fuzzyNames.enum';
 // import { AuthManager } from './services/auth.service';
@@ -17,11 +17,6 @@ useMeta({
 });
 
 const router = useRouter();
-
-onMounted(() => {
-  // const mamdani = new FuzzyService();
-  // console.log(mamdani.startMamdani(5, EFuzzyStatuses.Professional, 90));
-});
 
 onBeforeMount(async () => {
   await AuthManager.refresh(router);

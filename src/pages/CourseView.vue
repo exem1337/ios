@@ -123,7 +123,7 @@ async function onTopicSelect(key: number) {
     return;
   }
 
-  isCurrentTestDisabled.value = testResults.value?.find((test) => test.Test_Key === currentTopicRef.value?.Test_Key);
+  isCurrentTestDisabled.value = !!testResults.value?.find((test) => test.Test_Key === currentTopicRef.value?.Test_Key);
 }
 
 async function loadTopic(fileUrl: string) {
