@@ -160,7 +160,8 @@ onMounted(async () => {
     return;
   }
 
-  const status: IUserStatus = await api.get(`/getStoredStatusIos?physKey=${store.getUser.id}&disciplineKey=${route.params.id}&last=true`).then((res) => res.data.Data);
+  let status: IUserStatus = await api.get(`/getStoredStatusIos?physKey=${store.getUser.id}&disciplineKey=${route.params.id}&last=true`).then((res) => res.data.Data);
+  status = await api.get(`/getStoredStatus?physKey=${store.getUser.id}&disciplineKey=${disc.Key}&last=true`).then((res) => res.data.Data);
   const diffs: Array<IDisciplineDifficulty> = await api.get('/getSlojnaList').then((res) => res.data.Data);
   const diffKey = diffs.find((el) => el.Name?.toLowerCase() === status.Status.toLowerCase())?.Key;
   topics.value = topics.value.filter((el) => el.Diff_Level_Key === diffKey);  
