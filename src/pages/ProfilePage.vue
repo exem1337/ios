@@ -51,10 +51,17 @@ onBeforeMount(async () => {
     return;
   }
 
-  disciplines.value = await Promise.all(disciplines.value?.map(async (disc) => ({
-    ...disc,
-    status: await api.get(`/getStoredStatusIos?physKey=${store.getUser.id}&disciplineKey=${disc.Key}&last=true`).then((res) => res.data.Data),
-  })))
+  disciplines.value = await Promise.all(disciplines.value?.map(async (disc) => {
+    let status = await api.get(`/getStoredStatusIos?physKey=${store.getUser.id}&disciplineKey=${disc.Key}&last=true`).then((res) => res.data.Data);
+    if (!status) {
+      status = await api.get(`/getStoredStatus?physKey=${store.getUser.id}&disciplineKey=${disc.Key}&last=true`).then((res) => res.data.Data);
+    }
+
+    return {
+      ...disc,
+      status
+    }
+  }))
 })
 </script>
 

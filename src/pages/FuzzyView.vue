@@ -53,8 +53,6 @@ async function chapGet() {
       userkey,
     },
   });
-
-  console.log(sas?.data);
 }
 
 async function jwtGet() {
@@ -69,8 +67,6 @@ async function jwtGet() {
       userkey,
     },
   });
-
-  console.log(sas?.data);
 }
 
 onMounted(async () => {

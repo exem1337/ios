@@ -21,10 +21,6 @@ export function getChartValues(data: IRuleDots): IRuleDots {
     }
   }
 
-  console.log({
-    x, y
-  })
-
   return {
     x,
     y

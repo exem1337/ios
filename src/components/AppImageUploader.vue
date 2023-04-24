@@ -53,7 +53,6 @@ function onRemoveImage() {
 onBeforeMount(async () => {
   if (props.file) {
     const file = await FileService.getFile(props.file, props.type);
-    console.log(file)
 
     if (!file) {
       return;

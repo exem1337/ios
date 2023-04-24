@@ -117,11 +117,9 @@ function onUpdateQuestionImage(data: IUpdateImage) {
 }
 
 function onUpdateQuestionName(question: ITestQuestionUpdate) {
-  console.log(question)
   if (isCreate.value) {
     const foundQuestion = test.value.Questions?.find((q) => question.key === q.Key);
     if (foundQuestion) {
-      console.log(foundQuestion)
       foundQuestion.Header = question.header;
     }
     return;
@@ -207,7 +205,6 @@ async function onSave() {
       name: testName.value,
       difficulty: 15
     }).then((res) => res.data.Data);
-    console.log(testId)
     await api.patch(`/editTopicMaterial/${route.params.materialId}`, {
       testKey: testId,
     })

@@ -38,7 +38,6 @@ export class TestService {
   static getEduTimeDelta(edu: Array<IEduTime>) {
     const sum = edu.reduce((acc, val) => acc += val.Time, 0);
     const res = 50 * sum / 3600;
-    console.log(sum, res)
     return res > 100 ? 100 : res;
   }
 

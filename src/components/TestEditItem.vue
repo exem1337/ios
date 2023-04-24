@@ -231,7 +231,6 @@ onBeforeMount(async () => {
   
   const selectedAnswer = props.question.Answer?.find((ans) => ans.IsCorrect) || props.question.Answer?.[0];
   selectedAnswerKey.value = selectedAnswer?.Key;
-  console.log(selectedAnswer)
 
   emits('updateAnswer', {
     text: selectedAnswer.Text,

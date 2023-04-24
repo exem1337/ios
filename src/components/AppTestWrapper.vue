@@ -10,7 +10,7 @@
     class="complete-banner"
   >
     Вы прошли Тестирование <br>
-    Ващ результат: {{ prop?.resultTerm }}
+    Ваш результат: {{ prop?.resultTerm }}
     <q-btn
       color="primary"
       :loading="isButtonLoading"
@@ -20,6 +20,7 @@
     </q-btn>
     <q-btn
       color="primary" 
+      :disable="isDisabledByError"
       @click="onReturnToDisciplines"
     >
       Вернуться к списку дисциплин
@@ -48,7 +49,6 @@ import { useUserStore } from 'src/stores/userStore';
 import { IEduTime } from 'src/models/fuzzy.model';
 import { TestService } from 'src/services/test.service';
 import { difficultyMap } from 'src/constants/difficultyMap.const';
-// import { STATUS_RESULT } from 'src/constants/statusResult.const';
 
 const props = defineProps<{
   test: ITest;
@@ -71,6 +71,7 @@ const prop = ref();
 const isButtonLoading = ref(false);
 const testEduDelta = ref();
 const answerTimeDelta = ref();
+const isDisabledByError = ref(false);
 const correctPercentage = ref();
 
 function onReturnToDisciplines() {
@@ -89,6 +90,7 @@ async function onTestCompleted(result: ITestComplete) {
   })
   correctPercentage.value = Math.round(result.correct / props.test.Questions?.length * 100);
   isShowBanner.value = true;
+  await getBannerData(testEduDelta.value, answerTimeDelta.value, correctPercentage.value);
 }
 
 async function getBannerData(test: number, answer: number, correct: number) {
@@ -100,7 +102,12 @@ async function getBannerData(test: number, answer: number, correct: number) {
 
   const diff = difficultyMap.get(props.test.IosDifficulty.Name.toLowerCase());
   currentStatus.value = await api.get(`/fuzzyResult?ios=true&physKey=${store.getUser.id}&disciplineKey=${props.test.Discipline?.Key}&eduTimeKey=${key}&t1=${diff}&t2=${answer}&t3=${correct}&t4=${Math.round(test)}`).then((res) => res.data.Data);
-  // currentStatus.value = STATUS_RESULT;
+
+  if (!currentStatus.value) {
+    isDisabledByError.value = true;
+    return;
+  }
+
   const ruleGraphs = [];
   const rules = Object.keys(currentStatus.value).filter((key) => key.includes('RuleId'));
  
@@ -123,13 +130,8 @@ async function getBannerData(test: number, answer: number, correct: number) {
 
 async function onShowModal() {
   isButtonLoading.value = true;
-  await getBannerData(testEduDelta.value, answerTimeDelta.value, correctPercentage.value);
   isShowModal.value = true;
 }
-
-onBeforeMount(async () => {
-  const result = await api.get('/fuzzyResult?ios=true&physKey=3&disciplineKey=1&eduTimeKey=4&t1=25&t2=50&t3=67&t4=80');
-})
 </script>
 
 <style lang="scss" scoped>

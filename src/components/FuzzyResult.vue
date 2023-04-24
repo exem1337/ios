@@ -28,7 +28,7 @@ const props = defineProps<{
   componentProps: IFuzzyResult;
 }>()
 Chart.register(...registerables);
-console.log(props.componentProps)
+
 const mainData = {
   labels: props.componentProps.resultFunc.x,
   datasets: [
