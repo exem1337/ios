@@ -12,8 +12,19 @@
 import { useUserStore } from 'src/stores/userStore';
 import ExpertAbout from 'components/about/ExpertAbout.vue';
 import StudentAbout from 'components/about/StudentAbout.vue';
+import { onBeforeMount } from 'vue';
+import { AuthManager } from 'src/services/auth.service';
+import { RouterGuardManager } from 'src/utils/routerGuard.util';
+import { useRoute, useRouter } from 'vue-router';
 
 const store = useUserStore();
+const router = useRouter();
+const route = useRoute();
+
+onBeforeMount(async () => {
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
+})
 </script>
 
 <style lang="scss" scoped>

@@ -21,13 +21,18 @@
 <script lang="ts" setup>
 import { api } from 'src/boot/axios';
 import { ICourseResult } from 'src/models/course.model';
+import { AuthManager } from 'src/services/auth.service';
+import { RouterGuardManager } from 'src/utils/routerGuard.util';
 import { onBeforeMount, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const results = ref<Array<ICourseResult>>();
+const router = useRouter();
 
 onBeforeMount(async () => {
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
   results.value = await api.get(`/getDisciplineResults/${route.params.id}`).then((res) => res.data.Data);
 })
 </script>

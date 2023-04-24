@@ -103,6 +103,8 @@ import EditTopicFile from 'components/EditTopicFile.vue';
 import { useMeta } from 'quasar';
 import DisciplineTopic from 'components/DisciplineTopic.vue';
 import AppLoader from 'components/AppLoader.vue';
+import { AuthManager } from 'src/services/auth.service';
+import { RouterGuardManager } from 'src/utils/routerGuard.util';
 
 const route = useRoute();
 const router = useRouter();
@@ -209,6 +211,8 @@ async function loadData() {
 }
 
 onBeforeMount(async () => {
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
   await loadData();
 })
 </script>

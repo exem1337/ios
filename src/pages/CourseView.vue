@@ -77,8 +77,8 @@
 import { VuePdf, createLoadingTask } from 'vue3-pdfjs/esm';
 import { VuePdfPropsType } from 'vue3-pdfjs/components/vue-pdf/vue-pdf-props'; // Prop type definitions can also be imported
 import { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
-import { onMounted, ref, computed, onBeforeUnmount } from 'vue';
-import { useRoute } from 'vue-router';
+import { onMounted, ref, computed, onBeforeUnmount, onBeforeMount } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { api } from 'src/boot/axios';
 import { IDisciplineDifficulty, IDisciplineTopic } from 'src/models/course.model';
 import { IBasedResponse } from 'src/models/api.model';
@@ -87,6 +87,8 @@ import { FileService } from 'src/services/file.service';
 import AppLoader from 'components/AppLoader.vue';
 import { useUserStore } from 'src/stores/userStore';
 import { IUserStatus } from '../models/user.model';
+import { AuthManager } from 'src/services/auth.service';
+import { RouterGuardManager } from 'src/utils/routerGuard.util';
 
 const pdfSrc = ref<VuePdfPropsType['src']>(
   // 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf'
@@ -102,6 +104,7 @@ const isCurrentTestDisabled = ref(false);
 const store = useUserStore();
 const testResults = ref();
 const startTime = ref();
+const router = useRouter();
 
 async function logTime() {
   const timeToLog = (new Date().getTime() - startTime.value.getTime()) / 1000;
@@ -143,6 +146,11 @@ async function loadTopic(fileUrl: string) {
   currentPage.value = 1;
   isTopicLoading.value = false;
 }
+
+onBeforeMount(async () => {
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
+})
 
 onMounted(async () => {
   topics.value = await api.get<IBasedResponse<Array<IDisciplineTopic>>>(`/getTopics?discipline=${route.params.id}`)

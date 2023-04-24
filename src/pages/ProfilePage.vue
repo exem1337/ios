@@ -29,14 +29,22 @@
 <script lang="ts" setup>
 import { api } from 'src/boot/axios';
 import { IDiscipline } from 'src/models/course.model';
+import { AuthManager } from 'src/services/auth.service';
 import { TestService } from 'src/services/test.service';
 import { useUserStore } from 'src/stores/userStore';
+import { RouterGuardManager } from 'src/utils/routerGuard.util';
 import { onBeforeMount, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const store = useUserStore();
 const disciplines = ref<Array<IDiscipline>>();
+const router = useRouter();
+const route = useRoute();
 
 onBeforeMount(async () => {
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
+  
   disciplines.value = await api.get('/getMyDisciplines').then((res) => res.data.Data);
 
   if (store.isExpert) {

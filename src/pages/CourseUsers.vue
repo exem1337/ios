@@ -38,15 +38,17 @@
 <script lang="ts" setup>
 import { api } from 'src/boot/axios';
 import { onBeforeMount, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { IDisciplineUser } from '../models/course.model';
 import { useUserStore } from 'src/stores/userStore';
+import { AuthManager } from 'src/services/auth.service';
+import { RouterGuardManager } from 'src/utils/routerGuard.util';
 
 const route = useRoute();
 const users = ref<Array<IDisciplineUser>>();
 const store = useUserStore();
 const allUsers = ref();
-const roles = ref();
+const router = useRouter();
 
 async function onAddToDiscipline(key: number) {
   await api.post('/connectUserDiscipline', {
@@ -68,6 +70,8 @@ onBeforeMount(async () => {
   //   Login: 'kefteme@mail.ru',
   //   Password: '12345'
   // })
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
   
   users.value = await api.get(`/getDisciplineUsers/${route.params.id}`).then((res) => res.data.Data)
   allUsers.value = await api.get('/getAllUsers').then((res) => res.data.Data.filter((user) => !users.value?.find((us) => us.Key === user.Key)));

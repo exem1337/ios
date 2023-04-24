@@ -50,6 +50,8 @@ import { api } from 'src/boot/axios';
 import { useRoute, useRouter } from 'vue-router';
 import { useMeta } from 'quasar';
 import { IDiscipline } from 'src/models/course.model';
+import { AuthManager } from 'src/services/auth.service';
+import { RouterGuardManager } from 'src/utils/routerGuard.util';
 
 const test = ref<ITest>({
   Questions: [],
@@ -312,6 +314,9 @@ watch(
 )
 
 onBeforeMount(async () => {
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
+
   discipline.value = await api.get(`/getDisciplines?by=key&id=${route.params.id}`).then((res) => res.data.Data?.[0]);
 
   if (route.params.testId) {

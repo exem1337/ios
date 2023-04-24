@@ -75,8 +75,11 @@ import { api } from 'src/boot/axios';
 import { ICourse } from 'src/models/course.model';
 import { useUserStore } from 'src/stores/userStore';
 import { onBeforeMount, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import AppLoader from 'components/AppLoader.vue';
+import { AuthManager } from 'src/services/auth.service';
+import { RouterGuardManager } from 'src/utils/routerGuard.util';
+import { Cookies } from 'quasar';
 
 const disciplines = ref<Array<ICourse>>();
 const router = useRouter();
@@ -84,6 +87,7 @@ const store = useUserStore();
 const isDataLoading = ref(true);
 const newDisciplineName = ref();
 const newDisciplineDesc = ref();
+const route = useRoute();
 
 function onGoToEdit(id: number) {
   router.push(`/courses/${id}/edit`);
@@ -129,6 +133,8 @@ async function onCreate() {
 }
 
 onBeforeMount(async () => {
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
   await loadData();
 })
 </script>

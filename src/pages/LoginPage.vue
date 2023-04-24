@@ -43,12 +43,13 @@ import { useMeta } from 'quasar';
 import { AuthManager } from 'src/services/auth.service';
 import { RouterGuardManager } from 'src/utils/routerGuard.util';
 import { onBeforeMount, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const email = ref();
 const password = ref();
 const router = useRouter();
 const isLogging = ref(false);
+const route = useRoute();
 
 const meta = {
   title: 'Войти в систму',
@@ -62,8 +63,9 @@ const onSubmit = async () => {
   isLogging.value = false;
 };
 
-onBeforeMount(() => {
-  RouterGuardManager.useAuthGuard(router);
+onBeforeMount(async () => {
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
 })
 </script>
 

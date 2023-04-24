@@ -14,11 +14,6 @@ export class AuthManager {
       Email,
       Password
     }).then((res) => res.data.Data);
-    // await api.post('/addEduTime', {
-    //   time: 3600, //key 4
-    //   physKey: user.UserData.UserKey,
-    //   topicMaterialKey: 26,
-    // })
 
     Cookies.set('Token', user.Token);
     Cookies.set('Verify', user.UserData.Verify);
@@ -34,10 +29,10 @@ export class AuthManager {
         }
       }
     ).then((res) => res.data.Data);
-    
+
     if (!userInfo || !user) {
       router.push('/');
-      
+
       Notify.create({
         color: 'blue-8',
         message: 'Произошла ошибка при авторизации',
@@ -51,8 +46,9 @@ export class AuthManager {
       role: user.UserData.Role,
     })
 
+    this.refreshApi();
     router.push('/courses');
-  } 
+  }
 
   static logout(store: Store<'userStore', { user: IUser }>, router: Router): void {
     const ustore = useUserStore();
@@ -61,6 +57,15 @@ export class AuthManager {
     Cookies.remove('Verify');
     Cookies.remove('UserKey')
     router.push('/');
+    this.refreshApi();
+  }
+
+  static refreshApi() {
+    api.defaults.headers = {
+      Token: Cookies.get('Token'),
+      Verify: Cookies.get('Verify'),
+      UserKey: Cookies.get('UserKey'),
+    }
   }
 
   static async refresh(router: Router) {
@@ -71,10 +76,10 @@ export class AuthManager {
 
     if (token && verify && userKey) {
       const userInfo = await api.get<IBasedResponse<IUserInfoResponse>>(`/userInfo/${userKey}`).then((res) => res.data.Data);
-    
+
       if (!userInfo) {
         router.push('/');
-        
+
         Notify.create({
           color: 'blue-8',
           message: 'Произошла ошибка при авторизации',
@@ -90,5 +95,7 @@ export class AuthManager {
         role: userInfo.phys.Role,
       })
     }
+
+    this.refreshApi();
   }
 }

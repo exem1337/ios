@@ -32,12 +32,15 @@
 import { api } from 'src/boot/axios';
 import { IRule } from 'src/models/rules.model';
 import { onBeforeMount, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import AppLoader from 'components/AppLoader.vue';
+import { AuthManager } from 'src/services/auth.service';
+import { RouterGuardManager } from 'src/utils/routerGuard.util';
 
 const rules = ref<Array<IRule>>();
 const router = useRouter();
 const isDataLoading = ref();
+const route = useRoute();
 
 function onGoToRule(key: number) {
   router.push(`/expert/rules/${key}`);
@@ -48,6 +51,8 @@ function onRuleCreate() {
 }
 
 onBeforeMount(async () => {
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
   isDataLoading.value = true;
   rules.value = await api.get('/getIosRules').then((res) => res.data.Data);
   isDataLoading.value = false;
