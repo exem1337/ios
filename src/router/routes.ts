@@ -28,6 +28,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/CourseEdit.vue'),
       },
       {
+        path: '/operator',
+        component: () => import('pages/OperatorPage.vue'),
+      },
+      {
         path: '/courses/:id/edit/users',
         component: () => import('pages/CourseUsers.vue'),
       },

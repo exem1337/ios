@@ -26,11 +26,19 @@
           :class="{ 'selected' : route.path.includes('/profile') }"
         />
         <q-btn 
-          to="/about" 
+          to="/profile" 
           stretch 
           flat 
-          label="Справка" 
-          :class="{ 'selected' : route.path.includes('/about') }"
+          label="Профиль" 
+          :class="{ 'selected' : route.path.includes('/profile') }"
+        />
+        <q-btn 
+          v-if="userStore.isExpert"
+          to="/operator" 
+          stretch 
+          flat 
+          label="Пользователи" 
+          :class="{ 'selected' : route.path.includes('/operator') }"
         />
         <q-btn stretch flat label="Выход" @click="onLogout" />
       </template>

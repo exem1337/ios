@@ -18,6 +18,18 @@ export interface IUserInfoResponse {
   reg: IUserInfoResponseReg;
 }
 
+export interface IAllUsersInfoItem {
+  Email: string;
+  Key: number;
+  Login: string;
+  Name: string;
+  Reg_Date: string;
+  Role_Key: number;
+  Patronymic: string;
+  Role_Name: string;
+  Surname: string;
+}
+
 export interface IUserInfoResponsePhys {
   Email: string;
   Interface_Type: number;
@@ -26,7 +38,7 @@ export interface IUserInfoResponsePhys {
   Patronymic: string;
   Rating: string;
   Role_Key: number;
-  Role: IUserRole; 
+  Role: IUserRole;
   Sex_key: number;
   Surname: string;
 }
