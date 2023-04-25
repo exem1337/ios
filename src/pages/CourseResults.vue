@@ -41,6 +41,7 @@ onBeforeMount(async () => {
 .course-results {
   max-width: 80vw;
   margin: 0 auto;
+  margin-bottom: 24px;
 
   h4 {
     font-size: 24px;

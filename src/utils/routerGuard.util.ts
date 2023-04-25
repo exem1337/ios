@@ -9,6 +9,21 @@ export class RouterGuardManager {
       return;
     }
 
+    if (route.path.includes('/expert') && store.isStudent) {
+      router.push('/courses')
+      return;
+    }
+
+    if (route.path.includes('/courses') && route.params.id && !store.isStudent) {
+      router.push('/courses');
+      return;
+    }
+
+    if (route.path.includes('/operator') && store.isStudent) {
+      router.push('/courses');
+      return;
+    }
+
     if (route.path === '/') {
       router.push('/courses');
     }

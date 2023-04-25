@@ -5,9 +5,12 @@
       class="profile"
     >
       <span class="profile--header">ФИО: {{ store.getUser.name }}</span> <br>
-      <span class="profile--header">Роль: {{ store.isExpert ? 'Эксперт' : 'Студент' }}</span>
+      <span class="profile--header">Роль: {{ store.roleName }}</span>
 
-      <div class="profile--disciplines">
+      <div
+        v-if="!store.isOperator" 
+        class="profile--disciplines"
+      >
         <p>Список дисциплин</p>
         <div 
           v-for="disc in disciplines"

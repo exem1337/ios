@@ -10,10 +10,10 @@
           v-for="(course, key) in disciplines"
           :key="key"
           class="courses__wrapper--item bg-amber-1 shadow-2"
-          :class="{ 'disabled' : !store.isExpert && !course.status }"
+          :class="{ 'disabled' : store.isStudent && !course.status }"
         >
           <q-tooltip 
-            v-if="!store.isExpert && !course.status"
+            v-if="store.isStudent && !course.status"
             class="bg-brown-7"
           >
             Прежде чем начать просмотр дисциплины, получите ее статус
@@ -26,14 +26,14 @@
             <span v-if="!store.isExpert">Статус: {{ course.status?.Status || 'не определен' }}</span>
           </div>
           <q-btn
-            v-if="store.isExpert"
+            v-if="store.isExpert || store.isOperator"
             color="brown-8" 
             @click.stop="onGoToEdit(course?.Key)"
           >
             Редактировать
           </q-btn>
           <q-btn
-            v-if="store.isExpert"
+            v-if="store.isExpert || store.isOperator"
             color="brown-8" 
             @click.stop="onGoToResults(course?.Key)"
           >
@@ -41,7 +41,7 @@
           </q-btn>
         </q-item>
         <q-item
-          v-if="store.isExpert" 
+          v-if="store.isExpert || store.isOperator" 
           class="courses__wrapper--item bg-amber-1 shadow-2 new"
         >
           <div>
@@ -79,7 +79,6 @@ import { useRoute, useRouter } from 'vue-router';
 import AppLoader from 'components/AppLoader.vue';
 import { AuthManager } from 'src/services/auth.service';
 import { RouterGuardManager } from 'src/utils/routerGuard.util';
-import { Cookies } from 'quasar';
 
 const disciplines = ref<Array<ICourse>>();
 const router = useRouter();
@@ -98,7 +97,7 @@ function onGoToResults(id: number) {
 };
 
 function onGoToCourse(discipline: ICourse) {
-  if (store.isExpert || !discipline.status) {
+  if (store.isExpert || store.isOperator || !discipline.status) {
     return;
   }
 
@@ -107,11 +106,16 @@ function onGoToCourse(discipline: ICourse) {
 
 async function loadData() {
   isDataLoading.value = true;
-  disciplines.value = await api.get('/getMyDisciplines').then((res) => res.data.Data);
+  if (!store.isOperator) {
+    disciplines.value = await api.get('/getMyDisciplines').then((res) => res.data.Data);
+  }
+  else {
+    disciplines.value = await api.get('/getDisciplines').then((res) => res.data.Data);
+  }
   newDisciplineDesc.value = '';
   newDisciplineName.value = '';
 
-  if (store.isExpert) {
+  if (store.isExpert || store.isOperator) {
     isDataLoading.value = false;
     return;
   }
@@ -156,6 +160,7 @@ onBeforeMount(async () => {
   justify-content: space-between;
   align-items: flex-start;
   gap: 24px;
+  margin-bottom: 24px;
 
   &--item {
     position: relative;

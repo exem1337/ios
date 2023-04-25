@@ -10,6 +10,9 @@ export const useUserStore = defineStore('user', {
     getUser: (state) => state.user,
     isExpert: (state) => state.user?.role?.Name === EUserRole.Expert,
     isLoggedIn: (state) => !!state.user?.id,
+    isOperator: (state) => state.user?.role?.Name === EUserRole.Operator,
+    roleName: (state) => state.user?.role?.Name,
+    isStudent: (state) => state.user?.role?.Name === EUserRole.Student,
   },
   actions: {
     setUser(user: IUser) {

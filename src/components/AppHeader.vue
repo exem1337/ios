@@ -4,7 +4,7 @@
       <q-toolbar-title> АОС </q-toolbar-title>
       <template v-if="isShowNav">
         <q-btn 
-          v-if="userStore.isExpert"
+          v-if="userStore.isExpert || userStore.isOperator"
           to="/expert" 
           stretch 
           flat 
@@ -26,14 +26,7 @@
           :class="{ 'selected' : route.path.includes('/profile') }"
         />
         <q-btn 
-          to="/profile" 
-          stretch 
-          flat 
-          label="Профиль" 
-          :class="{ 'selected' : route.path.includes('/profile') }"
-        />
-        <q-btn 
-          v-if="userStore.isExpert"
+          v-if="userStore.isOperator"
           to="/operator" 
           stretch 
           flat 
