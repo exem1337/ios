@@ -95,7 +95,7 @@
 import { api } from 'src/boot/axios';
 import { IBasedResponse } from 'src/models/api.model';
 import { IDiscipline, IDisciplineDifficulty, IDisciplineTopic } from 'src/models/course.model';
-import { Ref, onBeforeMount, ref } from 'vue';
+import { Ref, onBeforeMount, ref, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import AppModal from 'components/AppModal.vue';
 import { IModalProps } from 'src/models/modal.model';
@@ -194,6 +194,7 @@ function sortTopics(topics: Array<IDisciplineTopic>): Array<Array<IDisciplineTop
 }
 
 async function loadData() {
+  await nextTick();
   isDataLoading.value = true;
   isPreventUpload.value = true;
   diffs.value = await api.get('/getSlojnaList').then((res) => res.data.Data);
@@ -201,7 +202,7 @@ async function loadData() {
   nameRef.value.name = discipline.value?.Name ?? '';
   nameRef.value.shName = discipline.value?.ShName ?? '';
   topics.value = await api.get<IBasedResponse<Array<IDisciplineTopic>>>(`/getTopics?discipline=${route.params.id}`)
-    .then((res) => res.data.Data.sort((a, b) => a.Number - b.Number));
+    .then((res) => res.data?.Data?.sort((a, b) => a.Number - b.Number));
   sortedTopics.value = sortTopics(topics.value);
   useMeta({
     title: `Редактирование дисциплины: ${discipline?.value?.Name}`

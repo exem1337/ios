@@ -34,7 +34,7 @@
           label="Email"
         /> 
         <q-input 
-          v-model="newUser.patronymic"
+          v-model="newUser.surname"
           label="Фамилия"
         /> 
         <q-input 
@@ -42,7 +42,7 @@
           label="Имя"
         /> 
         <q-input 
-          v-model="newUser.surname"
+          v-model="newUser.patronymic"
           label="Отчество"
         /> 
         <q-select
@@ -135,8 +135,8 @@ async function loadData() {
 }
 
 onBeforeMount(async () => {
-  await AuthManager.refresh(router);
-  RouterGuardManager.useAuthGuard(router, route);
+  // await AuthManager.refresh(router);
+  // RouterGuardManager.useAuthGuard(router, route);
   await loadData();
 })
 </script>

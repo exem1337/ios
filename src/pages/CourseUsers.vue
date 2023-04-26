@@ -1,5 +1,9 @@
 <template>
-  <div class="users-wrapper">
+  <AppLoader v-if="isDataLoading" />
+  <div
+    v-else 
+    class="users-wrapper"
+  >
     <q-card class="course-users">
       <p class="course-users__header">Пользователи дисциплины</p>
       <div
@@ -30,7 +34,7 @@
           @click="onAddToDiscipline(user.Key)"
         />
       </div>
-      <p v-if="!users || users.length === 1">нет пользователей, имеющих доступ к данной дисциплине</p>
+      <p v-if="!allUsers?.length">нет пользователей, не имеющих доступ к данной дисциплине</p>
     </q-card>
   </div>
 </template>
@@ -43,18 +47,27 @@ import { IDisciplineUser } from '../models/course.model';
 import { useUserStore } from 'src/stores/userStore';
 import { AuthManager } from 'src/services/auth.service';
 import { RouterGuardManager } from 'src/utils/routerGuard.util';
+import AppLoader from 'components/AppLoader.vue';
 
 const route = useRoute();
 const users = ref<Array<IDisciplineUser>>();
 const store = useUserStore();
 const allUsers = ref();
 const router = useRouter();
+const isDataLoading = ref(false);
 
 async function onAddToDiscipline(key: number) {
   await api.post('/connectUserDiscipline', {
     phys_key: key,
     discipline_key: Number(route.params.id),
   })
+}
+
+async function loadData() {
+  isDataLoading.value = true;
+  users.value = await api.get(`/getDisciplineUsers/${route.params.id}`).then((res) => res.data.Data)
+  allUsers.value = await api.get('/getAllUsers').then((res) => res.data.Data.filter((user) => !users.value?.find((us) => us.Key === user.Key) && user.Role_Name !== 'Оператор'));
+  isDataLoading.value = false;
 }
 
 onBeforeMount(async () => {
@@ -73,8 +86,7 @@ onBeforeMount(async () => {
   await AuthManager.refresh(router);
   RouterGuardManager.useAuthGuard(router, route);
   
-  users.value = await api.get(`/getDisciplineUsers/${route.params.id}`).then((res) => res.data.Data)
-  allUsers.value = await api.get('/getAllUsers').then((res) => res.data.Data.filter((user) => !users.value?.find((us) => us.Key === user.Key)));
+  await loadData();
 })
 </script>
 
