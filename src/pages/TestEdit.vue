@@ -1,5 +1,9 @@
 <template>
-  <div class="test">
+  <AppLoader v-if="isDataLoading" />
+  <div
+    v-show="!isDataLoading" 
+    class="test"
+  >
     <h4>{{ pageHeader }}</h4>
 
     <q-input 
@@ -35,6 +39,7 @@
       class="save"
       color="primary"
       icon="save"
+      :disable="isSaveBtnDisabled"
       @click="onSave"
     >
       Сохранить изменения
@@ -44,7 +49,7 @@
 
 <script lang="ts" setup>
 import { ITest, ITestAnswerUpdate, ITestQuestionUpdate, IUpdateImage } from 'src/models/test.model';
-import { onBeforeMount, ref, watch, nextTick } from 'vue';
+import { onBeforeMount, ref, watch, nextTick, computed } from 'vue';
 import TestEditItem from 'components/TestEditItem.vue';
 import { api } from 'src/boot/axios';
 import { useRoute, useRouter } from 'vue-router';
@@ -52,6 +57,7 @@ import { useMeta } from 'quasar';
 import { IDiscipline } from 'src/models/course.model';
 import { AuthManager } from 'src/services/auth.service';
 import { RouterGuardManager } from 'src/utils/routerGuard.util';
+import AppLoader from 'components/AppLoader.vue'
 
 const test = ref<ITest>({
   Questions: [],
@@ -71,6 +77,14 @@ const newQuestions = ref([]);
 const newAnswers = ref([]);
 const deletedQuestions = ref<Array<number>>([]);
 const discipline = ref<IDiscipline>();
+const isSaveBtnDisabled = computed(() => 
+  updatedQuestionNames.value.some((name) => !name.header) || 
+  updatedAnswers.value.some((ans) => !ans.text) || 
+  !testName.value || 
+  newAnswers.value.some((ans) => !ans.Text) ||
+  newQuestions.value.some((question) => !question.Answer?.length || !question.Header || question.Answer?.some((ans) => !ans.Text))
+);  
+const isDataLoading = ref(false);
 
 function onAddQuestion(): void {
   const question = {
@@ -296,8 +310,13 @@ async function onSave() {
   router.push(`/courses/${route.params.id}/edit`)
 }
 
-function onDeleteAnswer(key: number) {
-  deletedAnswers.value.push(key);
+function onDeleteAnswer(answer) {
+  console.log(answer)
+  if (!answer.isNew) {
+    deletedAnswers.value.push(answer.key);
+    return;
+  }
+  newAnswers.value = newAnswers.value.filter((ans) => ans.Key !== answer.Key)
 }
 
 function initEmptyTest() {
@@ -313,6 +332,7 @@ watch(
 onBeforeMount(async () => {
   await AuthManager.refresh(router);
   RouterGuardManager.useAuthGuard(router, route);
+  isDataLoading.value = true;
 
   discipline.value = await api.get(`/getDisciplines?by=key&id=${route.params.id}`).then((res) => res.data.Data?.[0]);
 
@@ -336,6 +356,7 @@ onBeforeMount(async () => {
     isCreate.value = true;
   }
   nextTick(() => (preventUpdate.value = false)) 
+  isDataLoading.value = false;
 })
 </script>
 

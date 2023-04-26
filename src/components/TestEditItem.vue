@@ -166,9 +166,7 @@ function onDeleteClick(answer: ITestQuestionAnswer) {
     1
   );
 
-  if (!answer.isNew) {
-    emits('onDelete', answer.Key);
-  }
+  emits('onDelete', answer);
 }
 
 function onUpdateAnswer(event: ITestQuestionAnswer) {
