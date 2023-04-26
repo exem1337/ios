@@ -135,8 +135,8 @@ async function loadData() {
 }
 
 onBeforeMount(async () => {
-  // await AuthManager.refresh(router);
-  // RouterGuardManager.useAuthGuard(router, route);
+  await AuthManager.refresh(router);
+  RouterGuardManager.useAuthGuard(router, route);
   await loadData();
 })
 </script>

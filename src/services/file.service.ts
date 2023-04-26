@@ -1,4 +1,4 @@
-import { api } from "src/boot/axios";
+import { api } from 'src/boot/axios';
 
 export class FileService {
   private static b64toBlob(b64Data: string, contentType = '', sliceSize = 512): Blob {

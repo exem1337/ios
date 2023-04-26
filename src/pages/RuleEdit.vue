@@ -94,7 +94,7 @@ async function onSave() {
     testDifficulty: rule.value?.Test_Difficulty.toLowerCase(),
     topicTime: rule.value?.Topic_Time.toLowerCase(),
   });
-  router.push(`/expert`);
+  router.push('/expert');
 }
 
 onBeforeMount(async () => {

@@ -22,9 +22,9 @@
 
 <script lang="ts" setup>
 import { LineChart } from 'vue-chart-3';
-import { Chart, registerables } from "chart.js";
+import { Chart, registerables } from 'chart.js';
 import { onBeforeMount, ref } from 'vue';
-import { ERuleLevels, ERuleNames, ERuleResultLevels } from 'src/enums/rule.enum';
+import { ERuleLevels, ERuleResultLevels } from 'src/enums/rule.enum';
 import { IRuleDots } from '../models/rules.model';
 import { getChartValues } from 'src/utils/chartValues.util';
 import { api } from 'src/boot/axios';

@@ -1,4 +1,4 @@
-import { EFuzzyStatuses, EPercentageFuzzyStatuses, ETermNames, ETimeFuzzyStatuses, ETopicTimeFuzzyStatuses } from "src/enums/fuzzyNames.enum";
+import { EFuzzyStatuses, EPercentageFuzzyStatuses, ETermNames, ETimeFuzzyStatuses, ETopicTimeFuzzyStatuses } from 'src/enums/fuzzyNames.enum';
 
 export const termOptionsMap = new Map<ETermNames, Array<ETimeFuzzyStatuses | EPercentageFuzzyStatuses | EFuzzyStatuses | ETopicTimeFuzzyStatuses>>([
   [ETermNames.AnswerTime, [
@@ -34,6 +34,6 @@ export const termOptionsMap = new Map<ETermNames, Array<ETimeFuzzyStatuses | EPe
     ETopicTimeFuzzyStatuses.Medium,
     ETopicTimeFuzzyStatuses.Slow,
     ETopicTimeFuzzyStatuses.LowerMedium,
-    ETopicTimeFuzzyStatuses.UpperMedium  
+    ETopicTimeFuzzyStatuses.UpperMedium
   ]]
 ]);

@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { IFuzzyResult } from 'src/models/user.model';
 import { LineChart } from 'vue-chart-3';
-import { Chart, registerables } from "chart.js";
+import { Chart, registerables } from 'chart.js';
 import { getResultValues } from 'src/utils/chartValues.util';
 
 const props = defineProps<{

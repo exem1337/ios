@@ -40,7 +40,7 @@
 import { api } from 'src/boot/axios';
 import AppTest from 'src/components/AppTest.vue';
 import { ITest, ITestComplete } from 'src/models/test.model';
-import { onBeforeMount, ref } from 'vue';
+import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import FuzzyResult from 'components/FuzzyResult.vue';
 import AppModal from 'components/AppModal.vue'

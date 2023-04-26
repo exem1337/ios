@@ -148,7 +148,7 @@ async function onAddMaterial(value: IAddImage) {
   })
 }
 
-function onEditTest(key: number, materialKey: number, diffKey: number) {
+function onEditTest(key: number, materialKey: number) {
   if (key) {
     router.push(`/courses/${route.params.id}/edit/test/${key}`);
   }

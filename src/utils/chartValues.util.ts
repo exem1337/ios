@@ -1,4 +1,4 @@
-import { IRuleDots } from "src/models/rules.model";
+import { IRuleDots } from 'src/models/rules.model';
 
 export function getChartValues(data: IRuleDots): IRuleDots {
   const x: Array<number> = [...data.x]

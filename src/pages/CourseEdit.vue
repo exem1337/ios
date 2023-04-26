@@ -83,23 +83,14 @@
       </q-btn>
     </div>
   </q-card>
-  <AppModal 
-    v-model="isShowTopicMaterialModal" 
-    :options="topicModalProps" 
-    @close="isShowTopicMaterialModal = false"
-    @ok="onAddTopicMaterial"
-  />
 </template>
 
 <script lang="ts" setup>
 import { api } from 'src/boot/axios';
 import { IBasedResponse } from 'src/models/api.model';
 import { IDiscipline, IDisciplineDifficulty, IDisciplineTopic } from 'src/models/course.model';
-import { Ref, onBeforeMount, ref, nextTick } from 'vue';
+import { onBeforeMount, ref, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import AppModal from 'components/AppModal.vue';
-import { IModalProps } from 'src/models/modal.model';
-import EditTopicFile from 'components/EditTopicFile.vue';
 import { useMeta } from 'quasar';
 import DisciplineTopic from 'components/DisciplineTopic.vue';
 import AppLoader from 'components/AppLoader.vue';
@@ -111,21 +102,13 @@ const router = useRouter();
 const discipline = ref<IDiscipline>();
 const topics = ref<Array<IDisciplineTopic>>([]);
 const diffs = ref<Array<IDisciplineDifficulty>>([]);
-const isShowTopicMaterialModal = ref(false);
 const nameRef = ref({
   name: '',
   shName: '',
 })
-const currentEditingTopic = ref<IDisciplineTopic>();
 const sortedTopics = ref<Array<Array<IDisciplineTopic>>>();
 const isPreventUpload = ref(true);
 const isDataLoading = ref(false);
-const topicModalProps = ref<IModalProps> ({
-  component: EditTopicFile,
-  headerText: 'Материал темы',
-  okButtonText: 'Сохранить',
-  componentModelValue: ''
-});
 const isShowNewTheme = ref(false);
 const newThemeName = ref();
 
@@ -155,25 +138,6 @@ async function onThemeCreate() {
   await loadData();
   isShowNewTheme.value = false;
   newThemeName.value = '';
-}
-
-async function onAddTopicMaterial(salt: Ref<string>) {
-  if (!currentEditingTopic.value) {
-    return;
-  }
-
-  await api.post('/postTopicMaterial', {
-    fileKey: salt.value,
-    diffLevelKey: currentEditingTopic.value.Diff_Level_Key,
-    topicKey: currentEditingTopic.value.TopicKey,
-    testKey: currentEditingTopic.value.Test_Key,
-  })
-}
-
-function onEditTopicMaterial(salt: string, topic: IDisciplineTopic) {
-  currentEditingTopic.value = topic;
-  topicModalProps.value.componentModelValue = salt;
-  isShowTopicMaterialModal.value = true;
 }
 
 function sortTopics(topics: Array<IDisciplineTopic>): Array<Array<IDisciplineTopic>> {

@@ -1,7 +1,7 @@
-import { api } from "src/boot/axios";
-import { ITestResponse } from "src/models/test.model";
-import { FileService } from "./file.service";
-import { IEduTime } from "src/models/fuzzy.model";
+import { api } from 'src/boot/axios';
+import { ITestResponse } from 'src/models/test.model';
+import { FileService } from './file.service';
+import { IEduTime } from 'src/models/fuzzy.model';
 
 export class TestService {
   static async getTest(key: number): Promise<ITestResponse> {

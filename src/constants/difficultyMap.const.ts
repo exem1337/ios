@@ -1,4 +1,4 @@
-import { ERuleResultLevels } from "src/enums/rule.enum";
+import { ERuleResultLevels } from 'src/enums/rule.enum';
 
 export const difficultyMap = new Map<ERuleResultLevels, number>([
   [ERuleResultLevels.Newbie, 5],

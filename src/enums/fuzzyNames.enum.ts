@@ -16,11 +16,11 @@ export enum ETimeFuzzyStatuses {
 }
 
 export enum ETopicTimeFuzzyStatuses {
-  Slow = "долго",
-  LowerMedium = "ниже среднего",
-  Medium = "средний",
-  UpperMedium = "выше среднего",
-  Fast = "быстро"
+  Slow = 'долго',
+  LowerMedium = 'ниже среднего',
+  Medium = 'средний',
+  UpperMedium = 'выше среднего',
+  Fast = 'быстро'
 }
 
 export enum EPercentageFuzzyStatuses {

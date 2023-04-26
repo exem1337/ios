@@ -26,14 +26,6 @@
 </template>
 
 <script lang="ts" setup>
-// import { FUZZY_RULES } from 'src/constants/fuzzyRules.const';
-
-import { Cookies } from 'quasar';
-import { api } from 'src/boot/axios';
-import { RouterGuard } from 'src/services/routerGuard.service';
-import { onMounted } from 'vue';
-import EncryptService from '../services/encrypt.service';
-
 const arr = [
   '12.09.2022, Степанова Ирина Васильевна, Среднее время тестирования - БЫСТРО, Статус обучаемого - ЭКСПЕРТ, Процент правильности ответов - АБСОЛЮТНО ПРАВИЛЬНО, Результат: Эксперт',
   '12.09.2022, Иванов Олег Евгеньевич, Среднее время тестирования - МЕДЛЕННО, Статус обучаемого - НОВИЧОК, Процент правильности ответов - ПОЧТИ НЕПРАВИЛЬНО, Результат: Новичок',
@@ -41,38 +33,6 @@ const arr = [
   '12.09.2022, Толстых Александра Дмитриевна, Среднее время тестирования - БЫСТРО, Статус обучаемого - СТУДЕНТ, Процент правильности ответов - ПОЧТИ ПРАВИЛЬНО, Результат: МАСТЕР',
   '12.09.2022, Третяк Сергей Александрович, Среднее время тестирования - МЕДЛЕННО, Статус обучаемого - ПРОФЕССИОНАЛ, Процент правильности ответов - ПОЧТИ НЕПРАВИЛЬНО, Результат: МАСТЕР',
 ];
-
-async function chapGet() {
-  const salt = Cookies.get('salt');
-  const N = Cookies.get('N');
-  const userkey = Cookies.get('userKey');
-
-  const sas = await api.get('/getRuleList', {
-    headers: {
-      Authorization: (salt + N).toString(),
-      userkey,
-    },
-  });
-}
-
-async function jwtGet() {
-  const token = Cookies.get('token');
-  const verify = Cookies.get('verify');
-  const userkey = Cookies.get('userkey');
-
-  const sas = await api.get('/getRuleList', {
-    headers: {
-      token,
-      verify,
-      userkey,
-    },
-  });
-}
-
-onMounted(async () => {
-  RouterGuard.checkExpert();
-  await chapGet();
-});
 </script>
 
 <style lang="scss" scoped>
