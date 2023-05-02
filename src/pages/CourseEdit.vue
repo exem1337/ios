@@ -5,17 +5,17 @@
     <div class="topic-name">
       <q-input
         label="Название"
-        color="brown-7"
+        color="secondary"
         v-model="nameRef.name"
       /> 
       <q-input
         label="Краткое название"
-        color="brown-7"
+        color="secondary"
         v-model="nameRef.shName"
       />
     </div>
     <q-btn 
-      color="primary"
+      color="secondary"
       @click="onGoToUsers"
     >
       Управление доступом

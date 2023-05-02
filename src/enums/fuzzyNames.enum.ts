@@ -43,3 +43,11 @@ export enum EAccuracynames {
   NonAccurate = 'Низкая степень уверенности',
   Accurate = 'Высокая степень уверенности',
 }
+
+export enum ESystemFuzzyNames {
+  TestDifficuilty = 'Test_Difficulty',
+  Result = 'Result',
+  AnswerTime = 'Answer_Time',
+  CorrectPercentage = 'Correct_Percentage',
+  TopicTime = 'Topic_Time',
+}

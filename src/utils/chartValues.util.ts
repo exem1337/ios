@@ -1,4 +1,23 @@
+import { ISystemDot } from 'src/models/fuzzy.model';
 import { IRuleDots } from 'src/models/rules.model';
+
+export function fillDotsDefaultValues(dot: ISystemDot): ISystemDot {
+  for (let i = 0; i < dot.Values?.length; i++) {
+    let diff = dot.Values?.[i]?.Value?.x?.length - dot.Values?.[i]?.Value?.y?.length;
+
+    while (diff) {
+      dot.Values?.[i]?.Value?.y?.push(0);
+      diff--;
+    }
+
+    if (dot.Values?.[i]?.Value?.x?.length === 3) {
+      dot.Values?.[i]?.Value?.y?.push(0);
+      dot.Values?.[i]?.Value?.x?.push(dot.Values?.[i]?.Value?.x[2]);
+    }
+  }
+
+  return dot;
+}
 
 export function getChartValues(data: IRuleDots): IRuleDots {
   const x: Array<number> = [...data.x]

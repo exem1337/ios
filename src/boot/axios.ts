@@ -8,8 +8,8 @@ declare module '@vue/runtime-core' {
   }
 }
 
-const api = axios.create({ 
-  baseURL: 'http://localhost:8080/api',
+const api = axios.create({
+  baseURL: 'http://localhost:8081/api',
   headers: {
     userKey: Cookies.get('UserKey'),
     token: Cookies.get('Token'),

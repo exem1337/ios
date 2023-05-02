@@ -4,6 +4,7 @@ import {
   ETermNames,
   EPercentageFuzzyStatuses,
   ETimeFuzzyStatuses,
+  ESystemFuzzyNames,
 } from 'src/enums/fuzzyNames.enum';
 
 export type TFuzzyName =
@@ -47,7 +48,7 @@ export interface IRuleDots {
 
 export interface IDifficulty {
   Key: number;
-  
+
 }
 
 export interface IEduTime {
@@ -55,4 +56,18 @@ export interface IEduTime {
   Phys_Key: number;
   Time: number;
   Topic_Material_Key: number;
+}
+
+export interface ISystemDot {
+  Key: number;
+  Name: ESystemFuzzyNames;
+  Term_System_Key: number;
+  Values: Array<ISystemDotValue>;
+}
+
+export interface ISystemDotValue {
+  Key: number;
+  Name: string;
+  Term_Key: number;
+  Value: IRuleDots;
 }

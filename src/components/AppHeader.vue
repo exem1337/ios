@@ -3,14 +3,35 @@
     <q-toolbar class="bg-brown-8">
       <q-toolbar-title> АОС </q-toolbar-title>
       <template v-if="isShowNav">
-        <q-btn 
+        <q-btn-dropdown 
           v-if="userStore.isExpert || userStore.isOperator"
-          to="/expert" 
+          color="primary" 
           stretch 
-          flat 
-          label="Экспертная система" 
+          label="Экспертная система"
           :class="{ 'selected' : route.path.includes('/expert') }"
-        />
+        >
+          <q-list>
+            <q-item 
+              clickable 
+              v-close-popup 
+              @click="router.push('/expert')"
+            >
+              <q-item-section>
+                <q-item-label>База правил</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item 
+              clickable 
+              v-close-popup 
+              @click="router.push('/expert/dots')"
+            >
+              <q-item-section>
+                <q-item-label>Videos</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
         <q-btn 
           to="/courses" 
           stretch 
@@ -58,5 +79,9 @@ const onLogout = () => {
 <style lang="scss" scoped>
 .selected {
   background-color: #6d4c41;
+}
+
+.q-btn::before {
+  box-shadow: none;
 }
 </style>

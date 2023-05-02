@@ -25,7 +25,7 @@ export class FileService {
     const file = await api.get(
       `/cdn/get/${salt}`,
       {
-        baseURL: 'http://localhost:8080',
+        baseURL: 'http://localhost:8081',
       }
     ).then((res) => res.data)
 
@@ -38,7 +38,7 @@ export class FileService {
     return await api.get(
       `/cdn/get/${salt}`,
       {
-        baseURL: 'http://localhost:8080',
+        baseURL: 'http://localhost:8081',
       }
     ).then((res) => res.data)
   }
@@ -55,7 +55,7 @@ export class FileService {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        baseURL: 'http://localhost:8080',
+        baseURL: 'http://localhost:8081',
       }
     ).then((res) => res.data.salt)
 

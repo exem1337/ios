@@ -16,6 +16,10 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/ExpertPage.vue'),
       },
       {
+        path: '/expert/dots',
+        component: () => import('src/pages/DotsEdit.vue'),
+      },
+      {
         path: '/expert/rules/:id',
         component: () => import('src/pages/RuleEdit.vue'),
       },
