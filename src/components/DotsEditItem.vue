@@ -15,7 +15,7 @@
       :key="currentKey" 
     />
     <div
-      v-for="(val, key) in xyS.x" 
+      v-for="(_, key) in xyS.x" 
       class="inputs"
       :key="key"
     >
@@ -28,7 +28,7 @@
         label="x"
       />
       <q-input 
-        @update:modelValue="event => xyS.x[key] = Number(event)"
+        @update:modelValue="event => xyS.y[key] = Number(event)"
         type="number"
         mask="000"
         :maxlength="3"
@@ -109,6 +109,31 @@ watch(
   () => {
     xyS.x = [...currentItem.value?.Value.x];
     xyS.y = [...currentItem.value?.Value.y];
+  }
+)
+
+watch(
+  [
+    xyS.x,
+    xyS.y
+  ],
+  () => {
+    console.log('sadas')
+    xyS.y = xyS.y.map((el) => el > 0 && el < 1 ? 1 : el < 0 ? 0 : el > 1 ? 1 : el);
+    xyS.x = xyS.x.map((el) => el > 100 ? 100 : el < 0 ? 0 : el);
+    if (xyS.x[0] > xyS.x[1]) {
+      console.log('sdad')
+      xyS.x[0] = 0;
+    }
+    if (xyS.x[1] < xyS.x[0]) {
+      xyS.x[1] = xyS.x[0] + 1;
+    }
+    if (xyS.x[2] > xyS.x[3]) {
+      xyS.x[2] = xyS.x[3] - 1;
+    }
+    if (xyS.x[3] < xyS.x[2]) {
+      xyS.x[2] = xyS.x[3] + 1;
+    }
   }
 )
 </script>

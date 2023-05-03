@@ -1,7 +1,7 @@
 <template>
   <q-header elevated bordered>
     <q-toolbar class="bg-brown-8">
-      <q-toolbar-title> АОС </q-toolbar-title>
+      <q-toolbar-title> Адаптивная Обучающая Система </q-toolbar-title>
       <template v-if="isShowNav">
         <q-btn-dropdown 
           v-if="userStore.isExpert || userStore.isOperator"
@@ -27,7 +27,7 @@
               @click="router.push('/expert/dots')"
             >
               <q-item-section>
-                <q-item-label>Videos</q-item-label>
+                <q-item-label>Редактирование лингвистических переменных</q-item-label>
               </q-item-section>
             </q-item>
           </q-list>
@@ -78,7 +78,7 @@ const onLogout = () => {
 
 <style lang="scss" scoped>
 .selected {
-  background-color: #6d4c41;
+  background-color: #6d4c41 !important;
 }
 
 .q-btn::before {
