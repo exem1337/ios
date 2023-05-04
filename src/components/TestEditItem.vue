@@ -2,7 +2,7 @@
   <q-card class="test-item">
     <q-btn 
       class="test-item--delete"
-      color="primary"
+      color="secondary"
       @click="onDeleteQuestion"
     >
       Удалить вопрос
@@ -59,7 +59,7 @@
       </div>
     </div>
     <q-btn
-      color="primary"
+      color="secondary"
       @click="onAnswerCreate"
     >
       Создать ответ

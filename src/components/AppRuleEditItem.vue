@@ -11,7 +11,7 @@
       />
       <q-btn 
         v-if="saveable"
-        color="primary"
+        color="secondary"
         @click="$emit('save')"
       >
         Сохранить
@@ -58,8 +58,8 @@ function setData() {
       {
         label: props.name,
         data: chartValues.value?.y,
-        backgroundColor: '#5d4037',
-        borderColor: '#5d4037',
+        backgroundColor: '#3f51b5',
+        borderColor: '#3f51b5',
       },
     ],
     width: '500px',

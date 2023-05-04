@@ -37,7 +37,7 @@
       
       <q-btn 
         :disable="!currentAnswer"
-        color="primary"
+        color="secondary"
         @click="onAnswer"
       >
         Продолжить

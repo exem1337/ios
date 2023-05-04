@@ -1,6 +1,6 @@
 <template>
-  <q-header elevated bordered>
-    <q-toolbar class="bg-brown-8">
+  <q-header elevated>
+    <q-toolbar class="primary">
       <q-toolbar-title> Адаптивная Обучающая Система </q-toolbar-title>
       <template v-if="isShowNav">
         <q-btn-dropdown 
@@ -54,7 +54,15 @@
           label="Пользователи" 
           :class="{ 'selected' : route.path.includes('/operator') }"
         />
+        <q-btn 
+          to="/about" 
+          stretch 
+          flat 
+          label="Справка" 
+          :class="{ 'selected' : route.path.includes('/about') }"
+        />
         <q-btn stretch flat label="Выход" @click="onLogout" />
+        <p v-if="currentStatus">Уровень доступа: {{ currentStatus }}</p>
       </template>
     </q-toolbar>
   </q-header>
@@ -70,6 +78,13 @@ const userStore = useUserStore();
 const isShowNav = computed(() => userStore.isLoggedIn);
 const router = useRouter();
 const route = useRoute();
+const currentStatus = computed(() => {
+  if (!userStore.isLoggedIn) {
+    return '';
+  }
+
+  return userStore.isExpert ? 'Эксперт' : userStore.isStudent ? 'Студент' : 'Оператор';
+})
 
 const onLogout = () => {
   AuthManager.logout(userStore, router);
@@ -78,10 +93,16 @@ const onLogout = () => {
 
 <style lang="scss" scoped>
 .selected {
-  background-color: #6d4c41 !important;
+  background-color: darken($primary, 5%) !important;
 }
 
 .q-btn::before {
   box-shadow: none;
+}
+
+p {
+  margin-bottom: 0;
+  font-size: 16px;
+  margin-left: 8px;
 }
 </style>

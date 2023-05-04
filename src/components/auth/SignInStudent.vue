@@ -63,8 +63,8 @@
               subtitle="Студент"
             >
               <div class="row items-center justify-end q-gutter-sm">
-                <q-btn label="Cancel" color="amber-6" flat v-close-popup />
-                <q-btn label="OK" color="amber-6" flat v-close-popup />
+                <q-btn label="Cancel" color="secondary" flat v-close-popup />
+                <q-btn label="OK" color="secondary" flat v-close-popup />
               </div>
             </q-date>
           </q-popup-proxy>
