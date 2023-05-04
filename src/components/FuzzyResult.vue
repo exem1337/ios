@@ -35,8 +35,8 @@ const mainData = {
     {
       label: 'Результатирующая функция',
       data: props.componentProps.resultFunc.y,
-      backgroundColor: '#5d4037',
-      borderColor: '#5d4037',
+      backgroundColor: '#3f51b5',
+      borderColor: '#3f51b5',
     },
     {
       label: 'Результат',
@@ -54,8 +54,8 @@ const otherData = props.componentProps.graphs.map((el) => ({
     {
       label: 'правило',
       data: el.y,
-      backgroundColor: '#5d4037',
-      borderColor: '#5d4037',
+      backgroundColor: '#3f51b5',
+      borderColor: '#3f51b5',
     },
     {
       label: 'Результат',

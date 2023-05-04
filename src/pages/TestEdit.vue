@@ -27,7 +27,7 @@
     <q-btn
       size="md"
       class="create"
-      color="primary"
+      color="secondary"
       icon="add"
       @click="onAddQuestion"
     >
@@ -37,7 +37,7 @@
     <q-btn
       size="md"
       class="save"
-      color="primary"
+      color="secondary"
       icon="save"
       :disable="isSaveBtnDisabled"
       @click="onSave"

@@ -12,14 +12,14 @@
     Вы прошли Тестирование <br>
     Ваш результат: {{ prop?.resultTerm }}
     <q-btn
-      color="primary"
+      color="secondary"
       :loading="isButtonLoading"
       @click="onShowModal"
     >
       Подробнее
     </q-btn>
     <q-btn
-      color="primary" 
+      color="secondary" 
       :disable="isDisabledByError"
       @click="onReturnToDisciplines"
     >

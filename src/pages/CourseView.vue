@@ -29,13 +29,13 @@
       <div>
         <q-tooltip
           v-if="!currentTopicRef?.Test_Key"
-          class="bg-brown-8"
+          class="bg-secondary"
         >
           Для данной темы не был добавлен тестовый материал
         </q-tooltip>
         <q-tooltip
           v-else-if="isCurrentTestDisabled"
-          class="bg-brown-8"
+          class="bg-secondary"
         >
           Данный тест уже пройден
         </q-tooltip>
@@ -208,7 +208,7 @@ onBeforeUnmount(async () => {
     top: 58px;
     right: 10%;
     border-radius: 4px;
-    background-color: #6d4c41;
+    background-color: $primary;
     display: flex;
     align-items: center;
     width: 170px;

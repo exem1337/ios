@@ -22,7 +22,7 @@
       <q-tooltip
         anchor="top middle" 
         color="primary"
-        class="bg-brown-7"
+        class="bg-secondary"
         self="bottom middle" 
         :offset="[10, 10]"
       >
@@ -50,13 +50,13 @@
         />
         <div>
           <q-btn
-            color="primary"
+            color="secondary"
             @click="onThemeCreate"
           >
             Сохранить
           </q-btn>
           <q-btn
-            color="primary"
+            color="secondary"
             @click="isShowNewTheme = false"
           >
             Отменить
@@ -76,7 +76,7 @@
 
       <q-btn
         class="save-btn"
-        color="primary"
+        color="secondary"
         @click="onSave"
       >
         Сохранить изменения
@@ -205,6 +205,11 @@ onBeforeMount(async () => {
 
   .topics-list {
     margin-top: 16px;
+
+    p {
+      font-weight: 500;
+      font-size: 20px;
+    }
   }
 
   .topic-name {

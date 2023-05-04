@@ -65,7 +65,7 @@
         <div class="button">
           <q-btn 
             label="Сохранить"
-            color="primary"
+            color="secondary"
             :disable="isSaveButtonDisabled"
             @click="onUserCreate"
           />

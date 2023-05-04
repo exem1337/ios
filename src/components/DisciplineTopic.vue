@@ -18,14 +18,14 @@
           <q-btn 
             v-if="!isShowNewTopic"
             :disable="!selectItems.length"
-            color="primary"
+            color="secondary"
             class="btn-add-new"
             @click="isShowNewTopic = true"
           >
             Добавить обучающий материал с новой сложностью
           </q-btn>
           <q-btn 
-            color="primary"
+            color="secondary"
             class="btn-add-new"
             @click="onDeleteTopic(topics?.[0]?.Key)"
           >
@@ -57,8 +57,8 @@
                 <q-tooltip
                   v-if="!selectedDifficulty?.Key || !newTopicFile"  
                   anchor="top middle" 
-                  color="primary"
-                  class="bg-brown-7"
+                  color="secondary"
+                  class="bg-secondary"
                   self="bottom middle" 
                   :offset="[10, 10]"
                 >
@@ -190,8 +190,8 @@ async function onCreateTopic() {
     padding: 16px;
     border-radius: 4px;
     margin-bottom: 8px;
-    background-color: #ffd998;
-    color: #5d4037;
+    background-color: $primary;
+    color: #fff;
     font-weight: 500;
     font-size: 1rem;
     cursor: pointer;
@@ -248,7 +248,7 @@ async function onCreateTopic() {
         background-color: #fff;
         border-radius: 4px;
         padding: 16px;
-        color: #3e2723;
+        color: $primary;
 
         &--header {
           min-width: 30%;
@@ -299,7 +299,7 @@ async function onCreateTopic() {
     }
 
     &:hover {
-      background-color: lighten(#ffd998, 5%);
+      background-color: lighten($primary, 5%);
     }
 
     &:last-child {

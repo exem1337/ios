@@ -97,7 +97,6 @@ onBeforeMount(async () => {
       }
 
       p {
-        color: $primary;
         font-size: 16px;
         font-weight: 700;
       }
@@ -108,8 +107,8 @@ onBeforeMount(async () => {
 
       &__item {
         width: 100%;
-        background-color: $secondary;
-        color: $primary;
+        background-color: $primary;
+        color: #fff;
         font-weight: 500;
         padding: 16px;
         border-radius: 4px;

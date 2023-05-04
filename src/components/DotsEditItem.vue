@@ -37,7 +37,7 @@
       />
     </div>
     <q-btn 
-      color="primary"
+      color="secondary"
       @click="onSave"
     >
       Сохранить
@@ -82,8 +82,8 @@ const chartData = computed(() => ({
     {
       label: currentItem.value?.Name,
       data: getChartValues(xyS)?.y,
-      backgroundColor: '#5d4037',
-      borderColor: '#5d4037',
+      backgroundColor: '#3f51b5',
+      borderColor: '#3f51b5',
     },
   ],
   width: '400px',

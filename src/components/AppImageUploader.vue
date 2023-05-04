@@ -2,6 +2,7 @@
   <q-uploader 
     :label="label ?? 'Картинка ответа (опционально)'"
     send-raw
+    color="secondary"
     ref="uploaderRef"
     @added="onAddImage"
     @removed="onRemoveImage"
@@ -67,12 +68,12 @@ onBeforeMount(async () => {
 <style lang="scss" scoped>
 .q-uploader {
   :deep(.q-uploader__file-header-content) {
-    color: #3e2723 !important;
+    color: $secondary !important;
   }
 
   :deep(.q-uploader__file-header) {
     .q-btn {
-      color: #3e2723 !important;
+      color: $secondary !important;
     }
   }
 }

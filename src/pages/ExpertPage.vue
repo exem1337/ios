@@ -6,7 +6,7 @@
   >
     <h4>База правил</h4>
     <q-btn 
-      color="primary"
+      color="secondary"
       @click="onRuleCreate"
     >
       Создать правило
@@ -85,8 +85,8 @@ onBeforeMount(async () => {
     gap: 16px;
 
     &--rule {
-      background-color: #ffd998;
-      color: #5d4037;
+      background-color: $primary;
+      color: #fff;
       transition: .3s ease;
       font-weight: 700;
       padding: 16px 8px;
@@ -97,8 +97,8 @@ onBeforeMount(async () => {
       gap: 4px;
 
       &:hover {
-        background-color: lighten(#ffd998, 5%);
-        color: lighten(#5d4037, 5%);
+        background-color: lighten($primary, 5%);
+        // color: lighten(#5d4037, 5%);
       }
 
       span {

@@ -9,12 +9,12 @@
         <q-item
           v-for="(course, key) in disciplines"
           :key="key"
-          class="courses__wrapper--item bg-amber-1 shadow-2"
+          class="courses__wrapper--item bg-primary text-white shadow-2"
           :class="{ 'disabled' : store.isStudent && !course.status }"
         >
           <q-tooltip 
             v-if="store.isStudent && !course.status"
-            class="bg-brown-7"
+            class="bg-secondary"
           >
             Прежде чем начать просмотр дисциплины, получите ее статус
           </q-tooltip>
@@ -27,14 +27,14 @@
           </div>
           <q-btn
             v-if="store.isExpert || store.isOperator"
-            color="brown-8" 
+            color="secondary" 
             @click.stop="onGoToEdit(course?.Key)"
           >
             Редактировать
           </q-btn>
           <q-btn
             v-if="store.isExpert || store.isOperator"
-            color="brown-8" 
+            color="secondary" 
             @click.stop="onGoToResults(course?.Key)"
           >
             Результаты 
@@ -42,7 +42,7 @@
         </q-item>
         <q-item
           v-if="store.isExpert || store.isOperator" 
-          class="courses__wrapper--item bg-amber-1 shadow-2 new"
+          class="courses__wrapper--item bg-primary shadow-2 new"
         >
           <div>
             <p class="courses__wrapper--item__heading">Новая дисциплина</p>
@@ -56,7 +56,7 @@
                 label="Описание"
               />
               <q-btn
-                color="primary"
+                color="secondary"
                 :disable="!newDisciplineDesc || !newDisciplineName"
                 @click="onCreate"
               >
@@ -214,7 +214,7 @@ onBeforeMount(async () => {
     }
 
     &:hover {
-      background: #ffecb3 !important;
+      background: lighten($primary, 5%) !important;
     }
 
     .q-btn {
