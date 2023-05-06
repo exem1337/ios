@@ -3,23 +3,21 @@
     <h4>Результаты обучающихся по дисциплине</h4>
 
     <div class="course-results__wrapper">
-      <q-card
-        v-for="(result, key) in results"
-        :key="key" 
-        class="course-results__wrapper--result"
-      >
-        <p>Название теста: <span>{{ result.TestName }}</span></p> 
-        <p>Сложность: <span>{{ result.Difficulty }}</span></p> 
-        <p>ФИО: <span>{{ result.Surname }} {{ result.Name }} {{ result.Patronymic }}</span></p>
-        <p>Дата прохождения: <span>{{ new Date(result.Date_Submitted).toLocaleDateString('ru-RU') }}</span></p>
-        <p>Результат: <span>{{ result.Result }}</span></p>
-      </q-card>
+      <q-table
+        class="my-sticky-header-table"
+        flat bordered
+        title="Результаты"
+        :rows="results"
+        :columns="COURSE_RESULT_COLUMNS"
+        row-key="name"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { api } from 'src/boot/axios';
+import { COURSE_RESULT_COLUMNS } from 'src/constants/courseResultsColumns.const';
 import { ICourseResult } from 'src/models/course.model';
 import { AuthManager } from 'src/services/auth.service';
 import { RouterGuardManager } from 'src/utils/routerGuard.util';
@@ -33,7 +31,10 @@ const router = useRouter();
 onBeforeMount(async () => {
   await AuthManager.refresh(router);
   RouterGuardManager.useAuthGuard(router, route);
-  results.value = await api.get(`/getDisciplineResults/${route.params.id}`).then((res) => res.data.Data);
+  results.value = await api.get(`/getDisciplineResults/${route.params.id}`).then((res) => res.data.Data?.map((el) => ({
+    ...el,
+    fio: `${el.Surname} ${el.Name} ${el.Patronymic}`
+  })));
 })
 </script>
 
@@ -42,6 +43,10 @@ onBeforeMount(async () => {
   max-width: 80vw;
   margin: 0 auto;
   margin-bottom: 24px;
+
+  :deep(.q-table__bottom) {
+    display: none;
+  }
 
   h4 {
     font-size: 24px;
