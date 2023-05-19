@@ -3,7 +3,8 @@
     <div class="about">
       <h4>Справка</h4> 
       <ExpertAbout v-if="store.isExpert" />
-      <StudentAbout v-else />   
+      <StudentAbout v-else-if="store.isStudent" />
+      <OperatorAbout v-else />   
     </div>
   </div>
 </template>
@@ -12,6 +13,7 @@
 import { useUserStore } from 'src/stores/userStore';
 import ExpertAbout from 'components/about/ExpertAbout.vue';
 import StudentAbout from 'components/about/StudentAbout.vue';
+import OperatorAbout from 'components/about/OperatorAbout.vue';
 import { onBeforeMount } from 'vue';
 import { AuthManager } from 'src/services/auth.service';
 import { RouterGuardManager } from 'src/utils/routerGuard.util';

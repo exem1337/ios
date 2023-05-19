@@ -189,13 +189,13 @@ onBeforeMount(async () => {
 
   &--users {
     width: 50%;
-    background-color: $secondary;
+    background-color: #fff;
     padding: 8px;
     border-radius: 4px;
     box-shadow: $shadow;
 
     &__header {
-      background-color: $primary;
+      background-color: $secondary;
       color: #fff;
       padding: 16px;
       margin-bottom: 8px;
