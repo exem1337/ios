@@ -42,7 +42,7 @@
         <q-btn
           color="secondary" 
           :to="`/test/${currentTopicRef?.Test_Key}/${currentTopicRef?.MaterialKey}`"
-          :disable="true"
+          :disable="!currentTopicRef?.Test_Key || isCurrentTestDisabled"
         >
           Пройти тестирование
         </q-btn>
