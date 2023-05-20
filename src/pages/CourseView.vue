@@ -28,13 +28,13 @@
       />
       <div>
         <q-tooltip
-          v-if="false"
+          v-if="!currentTopicRef?.Test_Key"
           class="bg-secondary"
         >
           Для данной темы не был добавлен тестовый материал
         </q-tooltip>
         <q-tooltip
-          v-else-if="true"
+          v-else-if="isCurrentTestDisabled"
           class="bg-secondary"
         >
           Данный тест уже пройден
