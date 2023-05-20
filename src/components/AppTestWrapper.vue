@@ -62,7 +62,7 @@ const modalProps: IModalProps = {
 }
 
 const isShowModal = ref(false);
-const isShowBanner = ref(true);
+const isShowBanner = ref(false);
 const store = useUserStore();
 const route = useRoute();
 const router = useRouter();
