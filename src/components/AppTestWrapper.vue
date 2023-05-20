@@ -101,7 +101,11 @@ async function getBannerData(test: number, answer: number, correct: number) {
   }).then((res) => res.data.Data.Key)
 
   const diff = difficultyMap.get(props.test.IosDifficulty.Name.toLowerCase());
-  currentStatus.value = await api.get(`/fuzzyResult?ios=true&physKey=${store.getUser.id}&disciplineKey=${props.test.Discipline?.Key}&eduTimeKey=${key}&t1=${diff}&t2=${Math.round(answer)}&t3=${correct}&t4=${Math.round(test)}`).then((res) => res.data.Data);
+  currentStatus.value = await api.get(`/fuzzyResult?ios=true
+  &physKey=${store.getUser.id}
+  &disciplineKey=${props.test.Discipline?.Key}
+  &eduTimeKey=${key}&t1=100&t2=90&t3=90&t4=90`)
+  .then((res) => res.data.Data);
 
   if (!currentStatus.value) {
     isDisabledByError.value = true;

@@ -28,13 +28,13 @@
       />
       <div>
         <q-tooltip
-          v-if="!currentTopicRef?.Test_Key"
+          v-if="false"
           class="bg-secondary"
         >
           Для данной темы не был добавлен тестовый материал
         </q-tooltip>
         <q-tooltip
-          v-else-if="isCurrentTestDisabled"
+          v-else-if="true"
           class="bg-secondary"
         >
           Данный тест уже пройден
@@ -42,7 +42,7 @@
         <q-btn
           color="secondary" 
           :to="`/test/${currentTopicRef?.Test_Key}/${currentTopicRef?.MaterialKey}`"
-          :disable="!currentTopicRef?.Test_Key || isCurrentTestDisabled"
+          :disable="true"
         >
           Пройти тестирование
         </q-btn>

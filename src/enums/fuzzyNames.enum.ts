@@ -8,19 +8,19 @@ export enum EFuzzyStatuses {
 }
 
 export enum ETimeFuzzyStatuses {
-  Slow = 'Медленно',
-  Medium = 'Средний',
-  LowerMedium = 'Ниже среднего',
-  UpperMedium = 'Выше среднего',
-  Fast = 'быстро',
+  Slow = 'Очень длинная',
+  Medium = 'Длинная',
+  LowerMedium = 'Средняя',
+  UpperMedium = 'Короткая',
+  Fast = 'Очень короткая',
 }
 
 export enum ETopicTimeFuzzyStatuses {
-  Slow = 'долго',
-  LowerMedium = 'ниже среднего',
-  Medium = 'средний',
-  UpperMedium = 'выше среднего',
-  Fast = 'быстро'
+  Slow = 'Очень большое',
+  LowerMedium = 'Большое',
+  Medium = 'Среднее',
+  UpperMedium = 'Малое',
+  Fast = 'Очень малое'
 }
 
 export enum EPercentageFuzzyStatuses {

@@ -1,4 +1,4 @@
-import { EPercentageFuzzyStatuses, ETimeFuzzyStatuses } from "src/enums/fuzzyNames.enum";
+import { EPercentageFuzzyStatuses, ETimeFuzzyStatuses, ETopicTimeFuzzyStatuses } from "src/enums/fuzzyNames.enum";
 import { ERuleLevels, ERuleResultLevels } from "src/enums/rule.enum";
 
 export interface IRule {
@@ -6,12 +6,12 @@ export interface IRule {
   Answer_Time: ETimeFuzzyStatuses;
   Correct_Percentage: EPercentageFuzzyStatuses;
   Test_Difficulty: ERuleResultLevels;
-  Topic_Time: ETimeFuzzyStatuses;
+  Topic_Time: ETopicTimeFuzzyStatuses;
   Result: ERuleResultLevels;
 }
 
 export interface ICreateRule {
-  Attentiveness: ERuleLevels; 
+  Attentiveness: ERuleLevels;
   Discipline_Level: ERuleLevels;
   Perseverance: ERuleLevels;
   Responsibility: ERuleLevels;
@@ -26,7 +26,7 @@ export interface IRuleDots {
 }
 
 export interface IRuleDotsResponse {
-  Answer_Time: IRuleDots; 
+  Answer_Time: IRuleDots;
   Correct_Percentage: IRuleDots;
   Test_Difficulty: IRuleDots;
   Topic_Time: IRuleDots;

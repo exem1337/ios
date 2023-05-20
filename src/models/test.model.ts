@@ -20,7 +20,7 @@ export interface ITestType {
 
 export interface ITestQuestion {
   Key?: number;
-  questionPhoto?: string;  
+  questionPhoto?: string;
   Header?: string;
   Answer?: Array<ITestQuestionAnswer>;
   Img: IImg;
@@ -37,7 +37,7 @@ export interface ITestQuestionAnswer {
   Question_Key?: number;
   Img_Key?: number;
   photo?: string;
-  IsCorrect: boolean;
+  IsCorrect: number;
 }
 
 export interface ITestUserAnswer {

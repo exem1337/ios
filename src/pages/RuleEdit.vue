@@ -107,7 +107,7 @@ onBeforeMount(async () => {
       Answer_Time: ETimeFuzzyStatuses.Slow,
       Correct_Percentage: EPercentageFuzzyStatuses.Incorrect,
       Test_Difficulty: ERuleResultLevels.Newbie,
-      Topic_Time: ETimeFuzzyStatuses.Slow,
+      Topic_Time: ETopicTimeFuzzyStatuses.Slow,
       Result: ERuleResultLevels.Newbie
     }
 

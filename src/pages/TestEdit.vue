@@ -95,7 +95,7 @@ function onAddQuestion(): void {
   }
   const answer = {
     Key: Math.random(),
-    IsCorrect: false,
+    IsCorrect: 0,
     Text: '',
     isNew: true,
     questionKey: question.Key,

@@ -67,10 +67,8 @@ const answerTimes = ref<Array<number>>([])
 
 async function onAnswer() {
   const result = await api.get(`/validateAnswer?questionKey=${props.test.Questions?.[currentQuestionKey.value].Key}&answerKey=${currentAnswer.value}`)
-  .then((res) => res.data.Data.Correct);
-  if (result) {
-    rightAnswers.value++;
-  }
+  .then((res) => res.data.Data.CorrectFloat);
+  rightAnswers.value += result;
   currentAnswer.value = null;
   if (currentQuestionKey.value + 1 === props.test.Questions?.length) {
     emits('comleted', { 

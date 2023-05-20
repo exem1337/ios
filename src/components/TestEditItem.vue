@@ -14,6 +14,7 @@
       @added="onAddQuestionImage"
       @removed="onRemoveQuestionImage"
       ref="fileUploaderRef"
+      color="secondary"
       accept=".png, image/*"
       max-files="1"
     />
@@ -38,12 +39,11 @@
         /> 
         
         <div class="answers__answer--actions">
-          <q-radio
-            v-model="selectedAnswerKey"
-            :val="answer.Key"
-          >
-            Правильный ответ
-          </q-radio>
+          <q-input
+            label="Степень правильности"
+            v-model="answer.IsCorrect"
+          />
+      
           <AppImageUploader
             :file="answer.Img?.File"
             :model="answer"
@@ -231,10 +231,10 @@ onBeforeMount(async () => {
   selectedAnswerKey.value = selectedAnswer?.Key;
 
   emits('updateAnswer', {
-    text: selectedAnswer.Text,
-    key: selectedAnswer.Key,
-    isCorrect: 1,
-    isNew: selectedAnswer.isNew,
+    text: selectedAnswer?.Text,
+    key: selectedAnswer?.Key,
+    isCorrect: selectedAnswer?.IsCorrect,
+    isNew: selectedAnswer?.isNew,
   })
 
   nextTick(() => (isPreventUploadFiles.value = false));
